@@ -18,6 +18,9 @@ namespace SWShop.DataAccess.Repository
         public IOrderHeaderRepository OrderHeader { get;private set;}
         public IOrderDetailRepository OrderDetail {get;private set;}
         public IProductImageRepository ProductImage { get;private set;}
+        public IRateRepository Rate { get; private set; }
+        public ILikeRepository Like { get; private set; }
+        public ISizeRepository Size { get; private set; }
         public UnitOfWork(ApplicationDbContext db)
         {
             _db = db;
@@ -28,6 +31,9 @@ namespace SWShop.DataAccess.Repository
             OrderHeader = new OrderHeaderRepository(_db);
             OrderDetail = new OrderDetailRepository(_db);
             ProductImage = new ProductImageRepository(_db);
+            Rate = new RateRepository(_db);
+            Like = new LikeRepository(_db);
+            Size = new SizeRepository(_db);
         }
 
         public void Save()

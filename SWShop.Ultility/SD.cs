@@ -28,6 +28,7 @@ namespace SWShop.Ultility
         public const string VNPay = "vnpay";
         public const string COD = "cod";
 
-        public const string SessionCart = "SessiongShoppingCart";
+        public const string SessionCart = "SessionShoppingCart";
+        public const string SessionLike = "SessionLike";
     }
 }

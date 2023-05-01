@@ -64,8 +64,8 @@ namespace SWShop.Areas.Customer.Controllers
 
             ShoppingCartVM.OrderHeader.Name = ShoppingCartVM.OrderHeader.ApplicationUser.Name;
             ShoppingCartVM.OrderHeader.PhoneNumber = ShoppingCartVM.OrderHeader.ApplicationUser.PhoneNumber;
-            ShoppingCartVM.OrderHeader.StreetAddress = ShoppingCartVM.OrderHeader.ApplicationUser.StreetAddress;
-            ShoppingCartVM.OrderHeader.City = ShoppingCartVM.OrderHeader.ApplicationUser.City;
+            //ShoppingCartVM.OrderHeader.StreetAddress = ShoppingCartVM.OrderHeader.ApplicationUser.StreetAddress;
+            //ShoppingCartVM.OrderHeader.City = ShoppingCartVM.OrderHeader.ApplicationUser.City;
 
             foreach (var cart in ShoppingCartVM.ShoppingCartList)
             {
@@ -101,7 +101,7 @@ namespace SWShop.Areas.Customer.Controllers
                 ShoppingCartVM.OrderHeader.PaymentStatus = SD.PaymentStatusPending;
                 ShoppingCartVM.OrderHeader.OrderStatus = SD.StatusPending;
             }
-            else if (ShoppingCartVM.OrderHeader.PaymentMethod.Equals(SD.COD))
+            else
             {
                 ShoppingCartVM.OrderHeader.PaymentStatus = SD.PaymentStatusDelayedPayment;
                 ShoppingCartVM.OrderHeader.OrderStatus = SD.StatusApproved;
@@ -123,18 +123,28 @@ namespace SWShop.Areas.Customer.Controllers
                 _unitOfWork.Save();
             }
 
-            PaymentInformationModel paymentInformation = new PaymentInformationModel();
-            paymentInformation.Id = ShoppingCartVM.OrderHeader.Id;
-            paymentInformation.Amount = ShoppingCartVM.OrderHeader.OrderTotal;
-            paymentInformation.Name = ShoppingCartVM.OrderHeader.Name;
-            var orderId = DateTime.Now.Ticks.ToString();
-            paymentInformation.OrderId = orderId;
-            
+            if (ShoppingCartVM.OrderHeader.PaymentMethod.Equals(SD.VNPay))
+            {
+                PaymentInformationModel paymentInformation = new PaymentInformationModel();
+                paymentInformation.Id = ShoppingCartVM.OrderHeader.Id;
+                paymentInformation.Amount = ShoppingCartVM.OrderHeader.OrderTotal;
+                paymentInformation.Name = ShoppingCartVM.OrderHeader.Name;
+                var orderId = DateTime.Now.Ticks.ToString();
+                paymentInformation.OrderId = orderId;
 
-            var url = _vnPayService.CreatePaymentUrl(paymentInformation, HttpContext);
-            _unitOfWork.OrderHeader.UpdateVNPayID(ShoppingCartVM.OrderHeader.Id, orderId, "");
-            _unitOfWork.Save();
-            return Redirect(url);
+
+                var url = _vnPayService.CreatePaymentUrl(paymentInformation, HttpContext);
+                _unitOfWork.OrderHeader.UpdateVNPayID(ShoppingCartVM.OrderHeader.Id, orderId, "");
+                _unitOfWork.Save();
+                return Redirect(url);
+            }
+            else
+            {
+                TempData["orderId"] = ShoppingCartVM.OrderHeader.Id;
+                return RedirectToAction(nameof(OrderConfirmation));
+            }
+
+
             //Response.Headers.Add("Location", url);
             //return new StatusCodeResult(303);
 
@@ -142,35 +152,84 @@ namespace SWShop.Areas.Customer.Controllers
         }
         public IActionResult OrderConfirmation()
         {
-            var response = _vnPayService.PaymentExecute(Request.Query);
-
-            if (response.VnPayResponseCode.Equals("00"))
+            if (Request.Query.Count == 12)
             {
-                string orderDes = response.OrderDescription;
-                int id = Convert.ToInt16(orderDes.Split('*')[1]);
-                OrderHeader orderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == id, includeProperties: "ApplicationUser");
-                if (orderHeader.PaymentStatus != SD.PaymentStatusDelayedPayment)
-                {
-                    var paymentStatus = true;
-                    if (paymentStatus)
-                    {
-                        _unitOfWork.OrderHeader.UpdateVNPayID(id, response.OrderId, response.TransactionId);
-                        _unitOfWork.OrderHeader.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
-                    }
-                }
+                var response = _vnPayService.PaymentExecute(Request.Query);
 
-                List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCart
-                    .GetAll(u => u.ApplicationUserId == orderHeader.ApplicationUserId).ToList();
-                _unitOfWork.ShoppingCart.RemoveRange(shoppingCarts);
-                _unitOfWork.Save();
-                HttpContext.Session.Clear();
-                ViewBag.OrderConfirmStatus = true;
-                ViewBag.OrderConfirmDetail = orderDes;
+                if (response.VnPayResponseCode.Equals("00"))
+                {
+                    string orderDes = response.OrderDescription;
+                    int id = Convert.ToInt16(orderDes.Split('*')[1]);
+                    OrderHeader orderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == id, includeProperties: "ApplicationUser");
+                    if (orderHeader.PaymentStatus != SD.PaymentStatusDelayedPayment)
+                    {
+                        var paymentStatus = true;
+                        if (paymentStatus)
+                        {
+                            _unitOfWork.OrderHeader.UpdateVNPayID(id, response.OrderId, response.TransactionId);
+                            _unitOfWork.OrderHeader.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusApproved);
+                        }
+                    }
+
+                    List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCart
+                        .GetAll(u => u.ApplicationUserId == orderHeader.ApplicationUserId).ToList();
+                    foreach (var item in shoppingCarts)
+                    {
+                        int count = item.Count;
+                        int productId = item.ProductId;
+                        int sizeId = item.SizeNo;
+                        var productSize = _unitOfWork.Size
+                        .Get(u => u.Id == sizeId && u.ProductId == productId);
+                        productSize.Amount -= count;
+                        _unitOfWork.Size.Update(productSize);
+                    }
+                    _unitOfWork.ShoppingCart.RemoveRange(shoppingCarts);
+                    _unitOfWork.Save();
+                    HttpContext.Session.Clear();
+                    ViewBag.OrderConfirmStatus = true;
+                    ViewBag.OrderConfirmDetail = orderDes;
+                }
+                else
+                {
+                    ViewBag.OrderConfirmStatus = false;
+                }
             }
             else
             {
-                ViewBag.OrderConfirmStatus = false;
+                if (TempData["orderId"] != null)
+                {
+                    int id = (int)TempData["orderId"];
+                    OrderHeader orderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == id, includeProperties: "ApplicationUser");
+                    if (orderHeader.PaymentStatus == SD.PaymentStatusDelayedPayment)
+                    {
+                        var paymentStatus = true;
+                        if (paymentStatus)
+                        {
+                            _unitOfWork.OrderHeader.UpdateStatus(id, SD.StatusApproved, SD.PaymentStatusDelayedPayment);
+                        }
+                    }
+
+                    List<ShoppingCart> shoppingCarts = _unitOfWork.ShoppingCart
+                        .GetAll(u => u.ApplicationUserId == orderHeader.ApplicationUserId).ToList();
+                    foreach (var item in shoppingCarts)
+                    {
+                        int count = item.Count;
+                        int productId = item.ProductId;
+                        int sizeId = item.SizeNo;
+                        var productSize = _unitOfWork.Size
+                        .Get(u => u.Id == sizeId && u.ProductId == productId);
+                        productSize.Amount -= count;
+                        _unitOfWork.Size.Update(productSize);
+                    }
+                    _unitOfWork.ShoppingCart.RemoveRange(shoppingCarts);
+                    _unitOfWork.Save();
+                    HttpContext.Session.Clear();
+                    ViewBag.OrderConfirmStatus = true;
+                    ViewBag.OrderConfirmDetail = "Đặt hàng thành công";
+                }
+
             }
+
 
             return View();
         }
@@ -206,26 +265,19 @@ namespace SWShop.Areas.Customer.Controllers
             _unitOfWork.ShoppingCart.Remove(cartFromDb);
             HttpContext.Session.SetInt32(SD.SessionCart,
                     _unitOfWork.ShoppingCart
-                    .GetAll(u => u.ApplicationUserId == cartFromDb.ApplicationUserId).Count()-1);
+                    .GetAll(u => u.ApplicationUserId == cartFromDb.ApplicationUserId).Count() - 1);
             _unitOfWork.Save();
             return RedirectToAction(nameof(Index));
         }
-        private double GetPriceBasedOnQuantity(ShoppingCart shoppingCart)
+        private decimal GetPriceBasedOnQuantity(ShoppingCart shoppingCart)
         {
-            if (shoppingCart.Count <= 50)
+            if (shoppingCart.Product.SalePrice == 0)
             {
                 return shoppingCart.Product.Price;
             }
             else
             {
-                if (shoppingCart.Count <= 100)
-                {
-                    return shoppingCart.Product.Price50;
-                }
-                else
-                {
-                    return shoppingCart.Product.Price100;
-                }
+                return shoppingCart.Product.SalePrice;
             }
         }
     }

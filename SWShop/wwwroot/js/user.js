@@ -1,4 +1,4 @@
-var dataTable;
+﻿var dataTable;
 
 $(document).ready(function () {
     loadDataTable();
@@ -17,15 +17,15 @@ function loadDataTable(){
                 "render": function (data) {
                     var today = new Date().getTime();
                     var lockout = new Date(data.lockoutEnd).getTime();
-                    if (lockout > today) {
+                    if (lockout <= today) {
                         return `
                         <div class="text-center">
                             <a onclick=LockUnLock('${data.id}') class="btn btn-danger text-white" style="cursor:pointer; width:100px;">
-                                <i class="bi bi-unlock-fill"></i> Lock
+                                <i class="bi bi-lock-fill"></i> Khóa
                             </a>
                             
                             <a href="/admin/user/RoleManagment?userId=${data.id}" class="btn btn-danger text-white" style="cursor:pointer; width:150px;">
-                                <i class="bi bi-pencil-square"></i> Permission
+                                <i class="bi bi-pencil-square"></i> Quyền
                             </a>
                         </div>
                     `
@@ -34,17 +34,17 @@ function loadDataTable(){
                         return `
                         <div class="text-center">
                             <a onclick=LockUnLock('${data.id}') class="btn btn-success text-white" style="cursor:pointer; width:110px;">
-                                <i class="bi bi-unlock-fill"></i> Unlock
+                                <i class="bi bi-unlock-fill"></i> Mở khóa
                             </a>
                             <a href="/admin/user/RoleManagment?userId=${data.id}" class="btn btn-danger text-white" style="cursor:pointer; width:150px;">
-                                <i class="bi bi-pencil-square"></i> Permission
+                                <i class="bi bi-pencil-square"></i> Quyền
                             </a>
                         </div>
                     `
                     }
 
                     return `<div class="w-75 btn-group" role="group">
-                     <a href="/admin/product/upsert?id=${data}" class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Edit</a>
+                     <a href="/admin/product/upsert?id=${data}" class="btn btn-primary mx-2"> <i class="bi bi-pencil-square"></i> Sửa</a>
                     </div>`
                 },
                 "width": "25%"

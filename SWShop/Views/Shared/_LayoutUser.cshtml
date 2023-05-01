@@ -1,0 +1,42 @@
+﻿
+
+<!doctype html>
+<html lang="en">
+<head>
+	<title>SWShop</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap" rel="stylesheet">
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	<link rel="stylesheet" href="~/login/css/style.css">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+
+</head>
+<body class="img js-fullheight" style="background-image: url('/login/images/bg.jpg');">
+    <button class="btn btn-primary btn-rounded btn-icon mt-4 ml-4 position-fixed" onclick="history.back()"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></button>
+	<section class="ftco-section">
+        <div class="container">
+			
+            <div class="main-panel">
+                <partial name="_Notification" />
+                @RenderBody()
+
+            </div>
+			
+		</div>
+	</section>
+
+	<script src="~/login/js/jquery.min.js"></script>
+	<script src="~/login/js/popper.js"></script>
+	<script src="~/login/js/bootstrap.min.js"></script>
+	<script src="~/login/js/main.js"></script>
+
+</body>
+</html>
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+@await RenderSectionAsync("Scripts", required: false)

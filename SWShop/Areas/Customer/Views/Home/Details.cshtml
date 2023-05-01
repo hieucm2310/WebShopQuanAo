@@ -1,13 +1,13 @@
 ﻿@model ShoppingCart
 
-<form method="post">
+@*<form method="post">
     <input asp-for="ProductId" hidden />
     <div class="card shadow border-0 mt-4 mb-4">
         <div class="card-header bg-info bg-gradient text-light py-4">
             <div class="row">
                 <div class="col-12 text-center">
-                    <h3 class="text-white text-uppercase">@Model.Product.Title</h3>
-                    <p class="text-white-50 fw-semibold mb-0">by @Model.Product.Author</p>
+                    <h3 class="text-white text-uppercase">@Model.Product.Name</h3>
+                    <p class="text-white-50 fw-semibold mb-0">by @Model.Product.Brand</p>
                 </div>
             </div>
         </div>
@@ -22,7 +22,7 @@
                 </div>
                 <div class="row">
                     <div class="col-12 col-lg-3 offset-lg-1 text-center mb-3">
-                        
+
                         @if (Model.Product.ProductImages != null && Model.Product.ProductImages.Count() > 0)
                         {
                             <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
@@ -31,7 +31,7 @@
                                     @foreach (var imageWithIndex in
                                     Model.Product.ProductImages.Select((image,index)=>new {Image=image, Index = index }))
                                     {
-                                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="@imageWithIndex.Index" 
+                                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="@imageWithIndex.Index"
                                         class="@(imageWithIndex.Index==0?"active":"")" aria-current="true" aria-label="Slide 1"></button>
                                     }
                                 </div>
@@ -63,7 +63,7 @@
                             <span class="badge">@Model.Product.Category.Name</span>
                         </div>
                         <div class="row ps-2">
-                            <h6 class="text-dark text-opacity-50 ">ISBN : @Model.Product.ISBN</h6>
+                            <h6 class="text-dark text-opacity-50 ">ISBN : ISBN</h6>
                         </div>
                         <div class="row ps-2">
                             <h6 class="text-dark text-opacity-50  pb-2">
@@ -95,10 +95,10 @@
                                 <div>@Model.Product.Price.ToString("c")</div>
                             </div>
                             <div class="p-1 col-3 col-lg-2 bg-white text-warning fw-bold">
-                                <div>@Model.Product.Price50.ToString("c")</div>
+                                <div>@Model.Product.SalePrice.ToString("c")</div>
                             </div>
                             <div class="p-1 col-3 col-lg-2 bg-white text-warning fw-bold">
-                                <div>@Model.Product.Price100.ToString("c")</div>
+                                <div>Price100</div>
                             </div>
                         </div>
                         <div class="row pl-2 my-3">
@@ -132,7 +132,491 @@
         </div>
     </div>
 </form>
+*@
 
+<!-- Breadcrumb Begin -->
+<div class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__links">
+                    <a asp-area="Customer" asp-controller="Home" asp-action="Index"><i class="fa fa-home"></i> Trang chủ</a>
+                    <a href="@Url.Action("Index", "Shop", new { category = Model.Product.CategoryId})"> @Model.Product.Category.Name</a>
+                    <span>@Model.Product.Name</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+<!-- Product Details Section Begin -->
+<section class="product-details spad">
+    <div class="container">
+        <form method="post">
+            <input id="productId" name="productId" value="@Model.ProductId" hidden />
+            <div class="row">
+                <div class="col-lg-6">
+
+                    <div class="product__details__pic">
+                        <div class="product__details__pic__left product__thumb nice-scroll">
+                            @if (Model.Product.ProductImages?.Count > 0)
+                            {
+                                <a class="pt active" href="#product-1">
+                                    <img src="@Model.Product.ProductImages.FirstOrDefault().ImageUrl.Replace(" \\", "/" )" alt="">
+                                </a>
+                            }
+                            @if (Model.Product.ProductImages != null && Model.Product.ProductImages.Count > 1)
+                            {
+                                @for (int i = 1; i < Model.Product.ProductImages.Count; i++)
+                                {
+                                    <a class="pt" href="#product-@(i+1)">
+                                        <img src="@Model.Product.ProductImages[i].ImageUrl.Replace(" \\", "/" )" alt="">
+                                    </a>
+                                }
+                            }
+                        </div>
+                        <div class="product__details__slider__content">
+                            <div class="product__details__pic__slider owl-carousel">
+                                @if (Model.Product.ProductImages?.Count > 0)
+                                {
+                                    @for (int i = 0; i < Model.Product.ProductImages.Count; i++)
+                                    {
+                                        <img data-hash="product-@(i + 1)" class="product__big__img" src="@Model.Product.ProductImages[i].ImageUrl.Replace(" \\", "/" )" alt="">
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="product__details__text">
+                        <h3>@Model.Product.Name <span>Brand: @Model.Product.Brand</span></h3>
+                        <div class="rating">
+                            @for (int i = 0; i < 5; i++)
+                            {
+                                if (i < Model.Product.Star)
+                                {
+                                    <i class="fa fa-star"></i>
+                                }
+                                else
+                                {
+                                    <i class="fa fa-star-o"></i>
+                                }
+                            }
+                            <span>( @Model.Product.RateCount reviews )</span>
+                        </div>
+                        @if (Model.Product.SalePrice != 0)
+                        {
+                            <div class="product__details__price">@Model.Product.SalePrice.ToString("C0", new System.Globalization.CultureInfo("vi-VN")).Replace(" ", "")<span>@Model.Product.Price.ToString("C0", new System.Globalization.CultureInfo("vi-VN")).Replace(" ", "")</span></div>
+                        }
+                        else
+                        {
+                            <div class="product__details__price">@Model.Product.Price.ToString("C0", new System.Globalization.CultureInfo("vi-VN")).Replace(" ", "")</div>
+                        }
+                        <p>
+                            @Html.Raw(Model.Product.Description)
+                        </p>
+                        <div class="product__details__button">
+                            <div class="quantity">
+                                <span>Quantity:</span>
+                                <div class="pro-qty">
+                                    <input id="count" type="text" value="1" name="count" />
+                                </div>
+                                <span asp-validation-for="Count" class="text-danger"></span>
+                            </div>
+                            <button id="btnSubmit" type="submit" class="cart-btn" style="line-height:normal"><span class="icon_bag_alt"></span> Thêm vào giỏ</button>
+                            <ul>
+                                <li id="likeIcon" data-liked="false" value="false"><span class="icon_heart" style="display:none"></span><span class="icon_heart_alt"></span></li>
+                            </ul>
+                        </div>
+                        <div class="product__details__widget">
+                            <ul>
+                                <li>
+                                    <span>Available size:</span>
+                                    <div class="size__btn">
+                                        @{
+                                            bool isFirst = true;
+                                            foreach (var item in Model.Product.Sizes.Where(u => u.Amount > 0))
+                                            {
+                                                if (isFirst)
+                                                {
+                                                    <label class="active">
+                                                        <input class="size" id="firstSize" type="radio" name="sizeNo" value="@item.Id">@item.Name
+                                                    </label>
+                                                    isFirst = false;
+                                                }
+                                                else
+                                                {
+                                                    <label>
+                                                        <input class="size" id="sizeId" type="radio" name="sizeNo" value="@item.Id">@item.Name
+                                                    </label>
+                                                }
+                                            }
+                                        }
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="col-lg-12">
+            <div class="product__details__tab">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">Mô tả</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab">Đánh giá ( @Model.Product.RateCount )</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div class="tab-pane active" id="tabs-1" role="tabpanel">
+                        <h6>Mô tả</h6>
+                        <p>
+                            @Html.Raw(Model.Product.Description)
+                        </p>
+                    </div>
+                    <div class="tab-pane" id="tabs-3" role="tabpanel">
+                        <h6>Reviews ( @Model.Product.RateCount )</h6>
+                        <div class="d-flex justify-content-xl-end">
+                            <button type="button" id="toggleRate" class="btn btn-info mb-3">Thêm đánh giá</button>
+                        </div>
+
+                        <div>
+                            <div id="rateDiv" style="display: none;">
+                                <form asp-action="AddRating" method="post" enctype="multipart/form-data">
+                                    <input type="hidden" name="productId" value="@Model.Product.Id" />
+                                    <input id="tmLike" type="hidden" name="isLike" value="false" />
+
+                                    <div class="form-group">
+                                        <label>Rating:</label>
+                                        <div class="rating">
+                                            <input type="hidden" name="starNum" value="0" />
+                                            <i class="fa fa-star" data-rating="1"></i>
+                                            <i class="fa fa-star" data-rating="2"></i>
+                                            <i class="fa fa-star" data-rating="3"></i>
+                                            <i class="fa fa-star" data-rating="4"></i>
+                                            <i class="fa fa-star" data-rating="5"></i>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="comment">Comment:</label>
+                                        <textarea class="form-control" name="comment"></textarea>
+                                        <input type="file" name="file" class="form-control border-0 shadow" />
+                                    </div>
+
+                                    <button class="site-btn justify-content-center" type="submit">Submit</button>
+                                </form>
+                            </div>
+                            <div class="comments">
+                                <ul>
+                                    @foreach (var rate in Model.Rates)
+                                    {
+                                        <li style="background-color:aliceblue">
+                                            <div class="comment-header">
+                                                <span class="comment-author">
+                                                    @rate.ApplicationUser.Name
+                                                    @for (int i = 0; i < rate.Star; i++)
+                                                    {
+                                                        <i class="fa fa-star" style="color:gold"></i>
+                                                    }
+                                                </span>
+                                                @if (User.IsInRole(SD.Role_Admin))
+                                                {
+                                                    <span class="comment-date">
+                                                        @rate.Date.ToString("MMMM d, yyyy") <button type="button" data-rateId="@rate.Id" class="btn btn-danger mx-2 btnRemoveRate">
+                                                            <i class="bi bi-trash-fill"></i>
+                                                        </button>
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="comment-date">@rate.Date.ToString("MMMM d, yyyy")</span>
+                                                }
+                                            </div>
+                                            <div class="comment-body">
+                                                @rate.Comment
+                                            </div>
+                                            <div class="comment-feedback">
+                                                @if (!String.IsNullOrEmpty(rate.ImageUrl))
+                                                {
+                                                    <a href="@rate.ImageUrl" class="image-popup"><img src="@rate.ImageUrl" width="90px" alt="Feedback Image"></a>
+                                                }
+                                            </div>
+                                        </li>
+                                    }
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row pt-5">
+            <div class="col-lg-12 text-center">
+                <div class="related__title">
+                    <h5>RELATED PRODUCTS</h5>
+                </div>
+            </div>
+
+            @foreach (var product in Model.Products)
+            {
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="product__item @(product.SalePrice != 0?"sale":"")">
+                        @if (product.ProductImages != null && product.ProductImages.Count() > 0)
+                        {
+                            <div class="product__item__pic set-bg" data-setbg="@product.ProductImages.FirstOrDefault().ImageUrl.Replace("\\", "/")" style="width:260px;height:360px">
+                                @if (product.QuantityRemain == 0)
+                                {
+                                    <div class="label stockout" style="background: #111111;">hết hàng</div>
+                                }
+                                else if ((DateTime.Now - product.CreatedDate).Days < 7)
+                                {
+                                    <div class="label new" style="background: #36a300;">Mới</div>
+                                }
+                                else if (product.SalePrice != 0)
+                                {
+                                    <div class="label sale">Sale</div>
+                                }
+
+                                <ul class="product__hover">
+                                    <li><a href="@product.ProductImages.FirstOrDefault().ImageUrl.Replace("\\", "/")" class="image-popup"><span class="arrow_expand"></span></a></li>
+                                    <li class="liLike" data-productId="@product.Id" data-isLike="@(!product.IsLike)">
+                                        <a href="#">
+                                            @if (product.IsLike)
+                                            {
+                                                <span class="icon_heart"></span>
+                                            }
+                                            else
+                                            {
+                                                <span class="icon_heart_alt"></span>
+                                            }
+                                        </a>
+                                    </li>
+                                    <li><a href="#"><span class="icon_bag_alt"></span></a></li>
+                                </ul>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="product__item__pic set-bg" data-setbg="https://placehold.co/500x600/png" style="width:260px;height:360px">
+                                @if (product.QuantityRemain == 0)
+                                {
+                                    <div class="label stockout" style="background: #111111;">hết hàng</div>
+                                }
+                                else if ((DateTime.Now - product.CreatedDate).Days < 7)
+                                {
+                                    <div class="label new" style="background: #36a300;">Mới</div>
+                                }
+                                else if (product.SalePrice != 0)
+                                {
+                                    <div class="label sale">Sale</div>
+                                }
+
+                                <ul class="product__hover">
+                                    <li><a href="https://placehold.co/500x600/png" class="image-popup"><span class="arrow_expand"></span></a></li>
+                                    <li class="liLike" data-productId="@product.Id" data-isLike="@(!product.IsLike)">
+                                        <a href="#">
+                                            @if (product.IsLike)
+                                            {
+                                                <span class="icon_heart"></span>
+                                            }
+                                            else
+                                            {
+                                                <span class="icon_heart_alt"></span>
+                                            }
+                                        </a>
+                                    </li>
+                                    <li><a href="#"><span class="icon_bag_alt"></span></a></li>
+                                </ul>
+                            </div>
+                        }
+                        <div class="product__item__text">
+                            <h6>
+                                <a asp-action="Details"
+                               asp-route-productId="@product.Id">@product.Name</a>
+                            </h6>
+                            <div class="rating">
+                                @for (int i = 0; i < 5; i++)
+                                {
+                                    if (i < product.Star)
+                                    {
+                                        <i class="fa fa-star"></i>
+                                    }
+                                    else
+                                    {
+                                        <i class="fa fa-star-o"></i>
+                                    }
+                                }
+                            </div>
+                            @if (product.SalePrice != 0)
+                            {
+                                <div class="product__price">$ @product.SalePrice.ToString("C0", new System.Globalization.CultureInfo("vi-VN")).Replace(" ", "") <span>$ @product.ListPrice.ToString("C0", new System.Globalization.CultureInfo("vi-VN")).Replace(" ", "")</span></div>
+                            }
+                            else
+                            {
+                                <div class="product__price">$ @product.Price.ToString("C0", new System.Globalization.CultureInfo("vi-VN")).Replace(" ", "")</div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+<!-- Product Details Section End -->
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            $("#firstSize").click();
+            $("#toggleRate").click(function () {
+                if ($("#rateDiv").is(":hidden")) {
+                    $("#rateDiv").show();
+                } else {
+                    $("#rateDiv").hide();
+                }
+            });
+
+            $(".rating i").click(function () {
+                var rating = $(this).data("rating");
+                $("input[name='starNum']").val(rating);
+                $(".rating i").removeClass("selected");
+                $(this).addClass("selected");
+                $(this).prevAll().addClass("selected");
+            });
+
+            $('#likeIcon').click(function () {
+                var isLiked = $(this).data('liked');
+
+                if (isLiked) {
+                    $(this).attr('value', 'false');
+                    $(this).data('liked', false);
+                    $('.icon_heart_alt').show();
+                    $('.icon_heart').hide();
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/Customer/Home/Like",
+                        data: {
+                            productId: @Model.ProductId,
+                            isLike: false
+                        },
+                        success: function (data) {
+                            $('#tmLike').attr('value', 'false');
+                            console.log("Like updated successfully.");
+                        },
+                        error: function (xhr, status, error) {
+                            console.log("An error occurred while updating the like.");
+                        }
+                    });
+
+
+                } else {
+                    $(this).attr('value', 'true');
+                    $(this).data('liked', true);
+                    $('.icon_heart_alt').hide();
+                    $('.icon_heart').show()
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/Customer/Home/Like",
+                        data: {
+                            productId: @Model.ProductId,
+                            isLike: true
+                        },
+                        success: function (data) {
+                            $('#tmLike').attr('value', 'true');
+                            console.log("Like updated successfully.");
+                        },
+                        error: function (xhr, status, error) {
+                            console.log("An error occurred while updating the like.");
+                        }
+                    });
+
+                }
+            });
+
+            var productId = parseInt($("#productId").val());
+            var sizeId = parseInt($("input[name='sizeNo']:checked").val());
+            $.ajax({
+                url: "/Customer/Home/GetAmount",
+                type: "GET",
+                data: { productId: productId, sizeId: sizeId },
+                dataType: "json",
+                success: function (data) {
+                    var x = parseInt(data.x);
+
+                    var count = parseInt($("#count").val());
+
+                    if (x < count) {
+                        Swal.fire('Khong du hang')
+                        $("#btnSubmit").prop("disabled", true);
+                    } else {
+                        $("#btnSubmit").prop("disabled", false);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // Handle any errors that occurred during the request
+                    console.log("Error: " + error);
+                }
+            });
+
+            $(".quantity, .size").on("click", function () {
+                var productId = parseInt($("#productId").val());
+                var sizeId = parseInt($("input[name='sizeNo']:checked").val());
+                $.ajax({
+                    url: "/Customer/Home/GetAmount",
+                    type: "GET",
+                    data: { productId: productId, sizeId: sizeId },
+                    dataType: "json",
+                    success: function (data) {
+                        var x = parseInt(data.x);
+
+                        var count = parseInt($("#count").val());
+
+                        if (x < count) {
+                            Swal.fire('Khong du hang')
+                            $("#btnSubmit").prop("disabled", true);
+                            $("#btnSubmit").css("background", 'darkgray');
+                        } else {
+                            $("#btnSubmit").prop("disabled", false);
+                            $("#btnSubmit").css("background", '#ca1515');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle any errors that occurred during the request
+                        console.log("Error: " + error);
+                    }
+                });
+            });
+        });
+        $('.image-popup').magnificPopup({
+            type: 'image'
+        });
+
+        $('.btnRemoveRate').click(function () {
+            var rateId = $(this).data('rateid');
+            var $button = $(this);
+
+            $.ajax({
+                type: "POST",
+                url: "/Customer/Home/DeleteRate",
+                data: {
+                    rateId: rateId
+                },
+                success: function (data) {
+                    $button.parent().parent().parent().remove();
+                    console.log("Remove rate successfully.");
+                },
+                error: function (xhr, status, error) {
+                    console.log("An error occurred while updating the like.");
+                }
+            });
+        });
+    </script>
 }

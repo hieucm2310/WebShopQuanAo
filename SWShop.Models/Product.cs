@@ -15,36 +15,51 @@ namespace SWShop.Models
         [Key]
         public int Id { get; set; }
         [Required]
-        public string Title { get; set; }
+        [Display(Name = "Tên sản phẩm")]
+        public string Name { get; set; }
+        [Display(Name = "Mô tả")]
         public string Description { get; set; }
         [Required]
-        public string ISBN { get; set; }
+        public string Brand { get; set; }
         [Required]
-        public string Author { get; set; }
-        [Required]
-        [Display(Name = "List Price")]
-        [Range(1, 1000)]
-        public double ListPrice { get; set; }
+        [Display(Name = "Giá niêm yết")]
+        [Range(1000, 1000000000)]
+        public decimal ListPrice { get; set; }
 
         [Required]
-        [Display(Name = "Price for 1-50")]
-        [Range(1, 1000)]
-        public double Price { get; set; }
+        [Display(Name = "Giá hiện tại")]
+        [Range(1, 1000000000)]
+        public decimal Price { get; set; }
 
         [Required]
-        [Display(Name = "Price for 50+")]
-        [Range(1, 1000)]
-        public double Price50 { get; set; }
+        [Display(Name = "Giá khuyến mãi")]
+        [Range(0, 1000000000)]
+        public decimal SalePrice { get; set; }
 
         [Required]
-        [Display(Name = "Price for 100+")]
-        [Range(1, 1000)]
-        public double Price100 { get; set; }
+        public int QuantitySold { get; set; }
+        [NotMapped]
+        public int QuantityRemain { get; set; }
+        public DateTime CreatedDate { get; set; } = DateTime.Now;
+        [DisplayName("Category")]
         public int CategoryId { get; set; }
         [ForeignKey("CategoryId")]
         [ValidateNever]
         public Category Category { get; set; }
         [ValidateNever]
+        public ICollection<Size> Sizes { get; set; }
+        [ValidateNever]
+        public ICollection<Like> Likes { get; set; }
+        [ValidateNever]
         public List<ProductImage> ProductImages { get; set; }
+        [NotMapped]
+        public bool IsLike { get; set; } = false; 
+        [NotMapped]
+        public int Star { get; set; } = 0;
+        [NotMapped]
+        public int RateCount { get; set; }
+        [NotMapped]
+        [ValidateNever]
+        public string SizeSelect { get; set; }
     }
 }

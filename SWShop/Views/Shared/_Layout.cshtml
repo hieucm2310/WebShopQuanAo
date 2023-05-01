@@ -6,104 +6,322 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - SWShop</title>
-    
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
-    <link rel="stylesheet" href="~/SWShop.styles.css" asp-append-version="true" />
+    <title>SWShop</title>
+    <link rel="shortcut icon" href="/images/logo.png" />
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.4/font/bootstrap-icons.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
     <link rel="stylesheet" href="//cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
 
+    <meta name="description" content="Ashion Template">
+    <meta name="keywords" content="Ashion, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Ashion | Template</title>
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cookie&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&display=swap"
+          rel="stylesheet">
+
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="~/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="~/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="~/css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="~/css/jquery-ui.min.css" type="text/css">
+    <link rel="stylesheet" href="~/css/magnific-popup.css" type="text/css">
+    <link rel="stylesheet" href="~/css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="~/css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="~/css/style.css" type="text/css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css">
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
 </head>
+
+
+
 <body>
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    <img src="/images/logo.png" style="width:30px" />
-                </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav me-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
+    @*<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+    <img src="/images/logo.png" style="width:30px" />
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+    <ul class="navbar-nav me-auto">
+    <li class="nav-item">
+    <a class="nav-link" asp-area="Customer" asp-controller="Home" asp-action="Index">Home</a>
+    </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="Admin" asp-controller="Order" asp-action="Index">Manage Order</a>
-                        </li>
-                        @if (User.IsInRole(SD.Role_Admin))
-                        {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Content Management
-                                </a>
-                                <ul class="dropdown-menu">
-                                    <li class="nav-item">
-                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">Category</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="Index">Product</a>
-                                    </li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li class="nav-item">
-                                        <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Register">Create User</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="dropdown-item" asp-area="Admin" asp-controller="User" asp-action="Index">Manage User</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        }
-                        @if (HttpContextAccessor.HttpContext.Session.GetInt32(SD.SessionCart) != null)
-                        {
-                            <li class="nav-item">
-                            <a class="nav-link" asp-area="Customer" asp-controller="Cart" asp-action="Index">
-                                <i class="bi bi-cart"></i> &nbsp; 
-                                (@HttpContextAccessor.HttpContext.Session.GetInt32(SD.SessionCart))
-                            </a>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="Customer" asp-controller="Cart" asp-action="Index">
-                                    <i class="bi bi-cart"></i> &nbsp;
-                                    (0)
-                                </a>
-                            </li>
-                        }
+    <li class="nav-item">
+    <a class="nav-link" asp-area="Admin" asp-controller="Order" asp-action="Index">Manage Order</a>
+    </li>
+    @if (User.IsInRole(SD.Role_Admin))
+    {
+    <li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Content Management
+    </a>
+    <ul class="dropdown-menu">
+    <li class="nav-item">
+    <a class="dropdown-item" asp-area="Admin" asp-controller="Category" asp-action="Index">Category</a>
+    </li>
+    <li class="nav-item">
+    <a class="dropdown-item" asp-area="Admin" asp-controller="Product" asp-action="Index">Product</a>
+    </li>
+    <li><hr class="dropdown-divider"></li>
+    <li class="nav-item">
+    <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Register">Create User</a>
+    </li>
+    <li class="nav-item">
+    <a class="dropdown-item" asp-area="Admin" asp-controller="User" asp-action="Index">Manage User</a>
+    </li>
+    </ul>
+    </li>
+    }
+    @if (HttpContextAccessor.HttpContext.Session.GetInt32(SD.SessionCart) != null)
+    {
+    <li class="nav-item">
+    <a class="nav-link" asp-area="Customer" asp-controller="Cart" asp-action="Index">
+    <i class="bi bi-cart"></i> &nbsp;
+    (@HttpContextAccessor.HttpContext.Session.GetInt32(SD.SessionCart))
+    </a>
+    </li>
+    }
+    else
+    {
+    <li class="nav-item">
+    <a class="nav-link" asp-area="Customer" asp-controller="Cart" asp-action="Index">
+    <i class="bi bi-cart"></i> &nbsp;
+    (0)
+    </a>
+    </li>
+    }
 
-                    </ul>
-                    <partial name="_LoginPartial" />
-                </div>
-            </div>
-        </nav>
+    </ul>
+    <partial name="_LoginPartial" />
+    </div>
+    </div>
+    </nav>
     </header>
     <div class="container">
-        <main role="main" style="padding-bottom:100px">
-            <partial name="_Notification" />
-            @RenderBody()
-        </main>
+    <main role="main" style="padding-bottom:100px">
+    <partial name="_Notification" />
+    @RenderBody()
+    </main>
     </div>
 
     <footer class="border-top footer bg-primary text-muted">
+    <div class="container">
+    Made with <i class="bi bi-arrow-through-heart-fill"></i> by Muwnhius
+    </div>
+    </footer>*@
+
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Offcanvas Menu Begin -->
+    <div class="offcanvas-menu-overlay"></div>
+    <div class="offcanvas-menu-wrapper">
+        <div class="offcanvas__close">+</div>
+        <ul class="offcanvas__widget">
+            <li><span class="icon_search search-switch"></span></li>
+            <li>
+                <a href="#">
+                    <span class="icon_heart_alt"></span>
+                    <div class="tip">2</div>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <span class="icon_bag_alt"></span>
+                    <div class="tip">2</div>
+                </a>
+            </li>
+        </ul>
+        <div class="offcanvas__logo">
+            <a asp-area="Customer" asp-controller="Home" asp-action="Index"><img alt=""></a>
+        </div>
+        <div id="mobile-menu-wrap"></div>
+        <div class="offcanvas__auth">
+            <partial name="_LoginPartial" />
+        </div>
+    </div>
+    <!-- Offcanvas Menu End -->
+    <!-- Header Section Begin -->
+    <header class="header">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xl-3 col-lg-2">
+                    <div class="header__logo">
+                        <a asp-area="Customer" asp-controller="Home" asp-action="Index">
+                            <img src="/images/logo.png" width="30px" style="padding-top: 5px;width: 50px;" alt="">
+                        </a>
+                        <a asp-area="Customer" asp-controller="Home" asp-action="Index">
+                            <img src="/images/logoChu.png" width="100px" style="padding-top: 13px;width: 100px;" alt="">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-xl-6 col-lg-7" style="text-align:center">
+                    <nav class="header__menu header__right__widget">
+                        <ul>
+                            <li><a asp-area="Customer" asp-controller="Home" asp-action="Index">Trang chủ</a></li>
+                            <li><a asp-area="Customer" asp-controller="Shop" asp-action="Index">Sản phẩm</a></li>
+                            <li><a asp-area="Customer" asp-controller="Order" asp-action="Index">Đơn hàng</a></li>
+                            @if (User.IsInRole(SD.Role_Admin))
+                            {
+                                <li>
+                                    <a asp-area="Admin" asp-controller="Home" asp-action="Index">
+                                        Quản trị <span><i class="fa fa-cogs" style="color:red"></i></span>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-lg-3">
+                    <div class="header__right">
+                        <div class="header__right__auth ">
+                            <partial name="_LoginPartial" />
+                        </div>
+                        <ul class="header__right__widget">
+                            <li><span class="icon_search search-switch" style="color:red"></span></li>
+                            <li>
+                                <a asp-area="Customer" asp-controller="Shop" asp-action="Likes">
+                                    <span class="icon_heart" style="color:red"></span>
+                                    @if (HttpContextAccessor.HttpContext.Session.GetInt32(SD.SessionLike) != null)
+                                    {
+                                        <div class="tip">@HttpContextAccessor.HttpContext.Session.GetInt32(SD.SessionLike)</div>
+                                    }
+                                    else
+                                    {
+                                        <div class="tip">0</div>
+                                    }
+                                </a>
+                            </li>
+                            <li>
+                                <a asp-controller="Cart" asp-action="Index">
+                                    <span class="icon_bag_alt" style="color:red"></span>
+                                    @if (HttpContextAccessor.HttpContext.Session.GetInt32(SD.SessionCart) != null)
+                                    {
+                                        <div class="tip">@HttpContextAccessor.HttpContext.Session.GetInt32(SD.SessionCart)</div>
+                                    }
+                                    else
+                                    {
+                                        <div class="tip">0</div>
+                                    }
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="canvas__open">
+                <i class="fa fa-bars"></i>
+            </div>
+        </div>
+    </header>
+    <!-- Header Section End -->
+
+    <main role="main" style="padding-bottom:100px">
+        <partial name="_Notification" />
+        @RenderBody()
+    </main>
+
+    <!-- Footer Section Begin -->
+    <footer class="footer">
         <div class="container">
-            Made with <i class="bi bi-arrow-through-heart-fill"></i> by Muwnhius
+            <div class="row">
+                <div class="col-lg-4 col-md-6 col-sm-7">
+                    <div class="footer__about">
+                        <div class="footer__logo">
+                            <a asp-area="Customer" asp-controller="Home" asp-action="Index"><img src="~/images/logoChu.png" width="175px" alt=""></a>
+                        </div>
+                        <p>
+                            Với cam kết chất lượng sản phẩm và dịch vụ, chúng tôi tin rằng khách hàng sẽ có trải nghiệm mua sắm tuyệt vời và trở thành một khách hàng trung thành của shop!
+                        </p>
+                        <div class="footer__payment">
+                            <a href="#"><img src="~/images/pttt/vnpay.svg" alt=""></a>
+                            <a href="#"><img src="~/images/pttt/cod.png" width="50px" alt=""></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-5">
+                    
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-4">
+                    <div class="footer__widget">
+                        <h6>Tài khoản</h6>
+                        <ul>
+                            <li><a asp-area="Identity" asp-controller="Account" asp-action="Manage">Tài khoản của tôi</a></li>
+                            <li><a asp-controller="Order" asp-action="Index">Theo dõi đơn hàng</a></li>
+                            <li><a asp-controller="Cart" asp-action="Index">Thanh toán</a></li>
+                            <li><a asp-controller="Shop" asp-action="Likes">Yêu thích</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-8 col-sm-8">
+                    <div class="footer__newslatter">
+                        <div class="footer__social">
+                            <a href="https://fb.com/hieu2310"><i class="fa fa-facebook"></i></a>
+                            <a href="https://instagram.com/muwn_hius/"><i class="fa fa-instagram"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                    <div class="footer__copyright__text">
+                        <p>Copyright &copy; <script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a></p>
+                    </div>
+                    <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                </div>
+            </div>
         </div>
     </footer>
+    <!-- Footer Section End -->
+    <!-- Search Begin -->
+    <div class="search-model">
+        <div class="h-100 d-flex align-items-center justify-content-center">
+            <div class="search-close-switch">+</div>
+            @*<form class="search-model-form">
+                <input type="text" id="search-input" placeholder="Search here.....">
+            </form>*@
+            @using (Html.BeginForm("Index", "Shop", FormMethod.Post, new { @class = "search-model-form" }))
+            {
+                <input type="text" name="searchTerm" placeholder="Search here...">
+            }
+        </div>
+    </div>
+    <!-- Search End -->
+    <!-- Js Plugins -->
+    <script src="~/js/jquery-3.3.1.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/jquery.magnific-popup.min.js"></script>
+    <script src="~/js/jquery-ui.min.js"></script>
+    <script src="~/js/mixitup.min.js"></script>
+    <script src="~/js/jquery.countdown.min.js"></script>
+    <script src="~/js/jquery.slicknav.js"></script>
+    <script src="~/js/owl.carousel.min.js"></script>
+    <script src="~/js/jquery.nicescroll.min.js"></script>
+    <script src="~/js/main.js"></script>
+
+
+    @*
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>*@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="//cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js" asp-append-version="true"></script>
 
     <script src="https://cdn.tiny.cloud/1/r0jv3rbx8c518wytjhol75cjwncwyrztlolpoq40atosehva/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

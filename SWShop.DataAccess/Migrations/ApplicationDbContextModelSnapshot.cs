@@ -253,20 +253,47 @@ namespace SWShop.DataAccess.Migrations
                         {
                             Id = 1,
                             DisplayOrder = 1,
-                            Name = "k7"
+                            Name = "Áo"
                         },
                         new
                         {
                             Id = 2,
                             DisplayOrder = 2,
-                            Name = "Tuhy"
+                            Name = "Quần"
                         },
                         new
                         {
                             Id = 3,
                             DisplayOrder = 3,
-                            Name = "Lihn"
+                            Name = "Giày"
                         });
+                });
+
+            modelBuilder.Entity("SWShop.Models.Like", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsLike")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Likes");
                 });
 
             modelBuilder.Entity("SWShop.Models.OrderDetail", b =>
@@ -283,8 +310,8 @@ namespace SWShop.DataAccess.Migrations
                     b.Property<int>("OrderHeaderId")
                         .HasColumnType("int");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -306,6 +333,10 @@ namespace SWShop.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("ApplicationUserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -313,7 +344,7 @@ namespace SWShop.DataAccess.Migrations
                     b.Property<string>("Carrier")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("City")
+                    b.Property<string>("District")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -327,8 +358,8 @@ namespace SWShop.DataAccess.Migrations
                     b.Property<string>("OrderStatus")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("OrderTotal")
-                        .HasColumnType("float");
+                    b.Property<decimal>("OrderTotal")
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("PaymentDate")
                         .HasColumnType("datetime2");
@@ -350,17 +381,21 @@ namespace SWShop.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("Province")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SessionId")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("ShippingDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("StreetAddress")
-                        .IsRequired()
+                    b.Property<string>("TrackingNumber")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TrackingNumber")
+                    b.Property<string>("Ward")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -378,36 +413,35 @@ namespace SWShop.DataAccess.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Author")
+                    b.Property<string>("Brand")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ISBN")
+                    b.Property<decimal>("ListPrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("ListPrice")
-                        .HasColumnType("float");
+                    b.Property<decimal>("Price")
+                        .HasColumnType("decimal(18,2)");
 
-                    b.Property<double>("Price")
-                        .HasColumnType("float");
+                    b.Property<int>("QuantitySold")
+                        .HasColumnType("int");
 
-                    b.Property<double>("Price100")
-                        .HasColumnType("float");
-
-                    b.Property<double>("Price50")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<decimal>("SalePrice")
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
 
@@ -419,80 +453,80 @@ namespace SWShop.DataAccess.Migrations
                         new
                         {
                             Id = 1,
-                            Author = "Billy Spark",
+                            Brand = "Billy Spark",
                             CategoryId = 1,
+                            CreatedDate = new DateTime(2023, 4, 29, 22, 0, 55, 437, DateTimeKind.Local).AddTicks(3699),
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
-                            ISBN = "SWD9999001",
-                            ListPrice = 99.0,
-                            Price = 90.0,
-                            Price100 = 80.0,
-                            Price50 = 85.0,
-                            Title = "Fortune of Time"
+                            ListPrice = 99m,
+                            Name = "Fortune of Time",
+                            Price = 90m,
+                            QuantitySold = 0,
+                            SalePrice = 85m
                         },
                         new
                         {
                             Id = 2,
-                            Author = "Nancy Hoover",
+                            Brand = "Nancy Hoover",
                             CategoryId = 3,
+                            CreatedDate = new DateTime(2023, 4, 29, 22, 0, 55, 437, DateTimeKind.Local).AddTicks(3716),
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
-                            ISBN = "CAW777777701",
-                            ListPrice = 40.0,
-                            Price = 30.0,
-                            Price100 = 20.0,
-                            Price50 = 25.0,
-                            Title = "Dark Skies"
+                            ListPrice = 99m,
+                            Name = "Dark Skies",
+                            Price = 90m,
+                            QuantitySold = 0,
+                            SalePrice = 85m
                         },
                         new
                         {
                             Id = 3,
-                            Author = "Julian Button",
+                            Brand = "Julian Button",
                             CategoryId = 1,
+                            CreatedDate = new DateTime(2023, 4, 29, 22, 0, 55, 437, DateTimeKind.Local).AddTicks(3719),
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
-                            ISBN = "RITO5555501",
-                            ListPrice = 55.0,
-                            Price = 50.0,
-                            Price100 = 35.0,
-                            Price50 = 40.0,
-                            Title = "Vanish in the Sunset"
+                            ListPrice = 99m,
+                            Name = "Vanish in the Sunset",
+                            Price = 90m,
+                            QuantitySold = 0,
+                            SalePrice = 85m
                         },
                         new
                         {
                             Id = 4,
-                            Author = "Abby Muscles",
+                            Brand = "Abby Muscles",
                             CategoryId = 2,
+                            CreatedDate = new DateTime(2023, 4, 29, 22, 0, 55, 437, DateTimeKind.Local).AddTicks(3721),
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
-                            ISBN = "WS3333333301",
-                            ListPrice = 70.0,
-                            Price = 65.0,
-                            Price100 = 55.0,
-                            Price50 = 60.0,
-                            Title = "Cotton Candy"
+                            ListPrice = 99m,
+                            Name = "Cotton Candy",
+                            Price = 90m,
+                            QuantitySold = 0,
+                            SalePrice = 85m
                         },
                         new
                         {
                             Id = 5,
-                            Author = "Ron Parker",
+                            Brand = "Ron Parker",
                             CategoryId = 1,
+                            CreatedDate = new DateTime(2023, 4, 29, 22, 0, 55, 437, DateTimeKind.Local).AddTicks(3723),
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
-                            ISBN = "SOTJ1111111101",
-                            ListPrice = 30.0,
-                            Price = 27.0,
-                            Price100 = 20.0,
-                            Price50 = 25.0,
-                            Title = "Rock in the Ocean"
+                            ListPrice = 99m,
+                            Name = "Rock in the Ocean",
+                            Price = 90m,
+                            QuantitySold = 0,
+                            SalePrice = 85m
                         },
                         new
                         {
                             Id = 6,
-                            Author = "Laura Phantom",
+                            Brand = "Laura Phantom",
                             CategoryId = 1,
+                            CreatedDate = new DateTime(2023, 4, 29, 22, 0, 55, 437, DateTimeKind.Local).AddTicks(3725),
                             Description = "Praesent vitae sodales libero. Praesent molestie orci augue, vitae euismod velit sollicitudin ac. Praesent vestibulum facilisis nibh ut ultricies.\r\n\r\nNunc malesuada viverra ipsum sit amet tincidunt. ",
-                            ISBN = "FOT000000001",
-                            ListPrice = 25.0,
-                            Price = 23.0,
-                            Price100 = 20.0,
-                            Price50 = 22.0,
-                            Title = "Leaves and Wonders"
+                            ListPrice = 99m,
+                            Name = "Leaves and Wonders",
+                            Price = 90m,
+                            QuantitySold = 0,
+                            SalePrice = 85m
                         });
                 });
 
@@ -518,6 +552,44 @@ namespace SWShop.DataAccess.Migrations
                     b.ToTable("ProductImages");
                 });
 
+            modelBuilder.Entity("SWShop.Models.Rate", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ImageUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Star")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Rates");
+                });
+
             modelBuilder.Entity("SWShop.Models.ShoppingCart", b =>
                 {
                     b.Property<int>("Id")
@@ -536,6 +608,9 @@ namespace SWShop.DataAccess.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
+                    b.Property<int>("SizeNo")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationUserId");
@@ -543,6 +618,31 @@ namespace SWShop.DataAccess.Migrations
                     b.HasIndex("ProductId");
 
                     b.ToTable("ShoppingCarts");
+                });
+
+            modelBuilder.Entity("SWShop.Models.Size", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("Amount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Sizes");
                 });
 
             modelBuilder.Entity("SWShop.Models.ApplicationUser", b =>
@@ -554,12 +654,6 @@ namespace SWShop.DataAccess.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PostalCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("State")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StreetAddress")
@@ -619,6 +713,25 @@ namespace SWShop.DataAccess.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("SWShop.Models.Like", b =>
+                {
+                    b.HasOne("SWShop.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SWShop.Models.Product", "Product")
+                        .WithMany("Likes")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("SWShop.Models.OrderDetail", b =>
                 {
                     b.HasOne("SWShop.Models.OrderHeader", "OrderHeader")
@@ -671,6 +784,25 @@ namespace SWShop.DataAccess.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("SWShop.Models.Rate", b =>
+                {
+                    b.HasOne("SWShop.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SWShop.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("SWShop.Models.ShoppingCart", b =>
                 {
                     b.HasOne("SWShop.Models.ApplicationUser", "ApplicationUser")
@@ -690,9 +822,24 @@ namespace SWShop.DataAccess.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("SWShop.Models.Size", b =>
+                {
+                    b.HasOne("SWShop.Models.Product", "Product")
+                        .WithMany("Sizes")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("SWShop.Models.Product", b =>
                 {
+                    b.Navigation("Likes");
+
                     b.Navigation("ProductImages");
+
+                    b.Navigation("Sizes");
                 });
 #pragma warning restore 612, 618
         }

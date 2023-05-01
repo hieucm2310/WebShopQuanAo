@@ -16,6 +16,7 @@ namespace SWShop.Models
         [ForeignKey("ProductId")]
         [ValidateNever]
         public Product Product { get; set; }
+        public int SizeNo { get; set; }
         [Range(1, 1000, ErrorMessage = "Please enter a value between 1 and 1000")]
         public int Count { get; set; }
         public string ApplicationUserId { get; set; }
@@ -23,6 +24,10 @@ namespace SWShop.Models
         [ValidateNever]
         public ApplicationUser ApplicationUser { get; set; }
         [NotMapped]
-        public double Price { get; set; }
+        public decimal Price { get; set; }
+        [NotMapped]
+        public IEnumerable<Product> Products { get; set; }
+        [NotMapped]
+        public IEnumerable<Rate> Rates { get; set; }
     }
 }

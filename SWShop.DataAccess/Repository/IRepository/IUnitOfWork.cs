@@ -15,6 +15,9 @@ namespace SWShop.DataAccess.Repository.IRepository
         IOrderDetailRepository OrderDetail { get; }
         IOrderHeaderRepository OrderHeader { get; }
         IProductImageRepository ProductImage { get; }
+        IRateRepository Rate { get; }
+        ILikeRepository Like { get; }
+        ISizeRepository Size { get; }
         void Save();
     }
 }

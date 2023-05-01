@@ -12,7 +12,7 @@
                             Shopping Cart
                         </h5>
                     </div>
-                    <div class="col-6 text-end">
+                    <div class="col-6 text-end text-right">
                         <a asp-action="Index" class="btn btn-outline-secondary bg-gradient btn-sm text-uppercase">Back to Cart</a>
                     </div>
                 </div>
@@ -44,24 +44,50 @@
                                     <span asp-validation-for="OrderHeader.PhoneNumber" class="text-danger"></span>
                                 </div>
                             </div>
+                            
                             <div class="row my-1">
                                 <div class="col-3">
-                                    <label>Street Address</label>
+                                    <label>Province</label>
                                 </div>
                                 <div class="col-9">
-                                    <input asp-for="OrderHeader.StreetAddress" class="form-control" />
-                                    <span asp-validation-for="OrderHeader.StreetAddress" class="text-danger"></span>
+                                    <input id="iprovince" asp-for="OrderHeader.Province" class="form-control" hidden />
+                                    <select id="province" class="form-select border-0 shadow">
+                                    </select>
+                                    <span asp-validation-for="OrderHeader.Province" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row my-1" id="divDistrict" style="display:none">
+                                <div class="col-3">
+                                    <label>District</label>
+                                </div>
+                                <div class="col-9">
+                                    <input id="idistrict" asp-for="OrderHeader.District" class="form-control" hidden />
+                                    <select id="district" class="form-select border-0 shadow">
+                                    </select>
+                                    <span asp-validation-for="OrderHeader.District" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="row my-1" id="divWard" style="display:none">
+                                <div class="col-3">
+                                    <label>Ward</label>
+                                </div>
+                                <div class="col-9">
+                                    <input id="iward" asp-for="OrderHeader.Ward" class="form-control" hidden />
+                                    <select id="ward" class="form-select border-0 shadow">
+                                    </select>
+                                    <span asp-validation-for="OrderHeader.Ward" class="text-danger"></span>
                                 </div>
                             </div>
                             <div class="row my-1">
                                 <div class="col-3">
-                                    <label>City</label>
+                                    <label>Address</label>
                                 </div>
                                 <div class="col-9">
-                                    <input asp-for="OrderHeader.City" class="form-control" />
-                                    <span asp-validation-for="OrderHeader.City" class="text-danger"></span>
+                                    <input asp-for="OrderHeader.Address" class="form-control" />
+                                    <span asp-validation-for="OrderHeader.Address" class="text-danger"></span>
                                 </div>
                             </div>
+                            
                         </div>
                         <div class="col-12 col-lg-5 offset-lg-1">
                             <div>
@@ -73,10 +99,10 @@
                                     {
                                         <li class="list-group-item d-flex justify-content-between">
                                             <div>
-                                                <h6 class="my-0 ">@details.Product.Title</h6>
+                                                <h6 class="my-0 ">@details.Product.Name</h6>
                                                 <small class="text-muted">Quantity: @details.Count</small>
                                             </div>
-                                            <span class="text-muted">@((details.Price * details.Count).ToString("c"))</span>
+                                            <span class="text-muted">@((details.Price * details.Count).ToString("C0", new System.Globalization.CultureInfo("vi-VN")).Replace(" ", ""))</span>
                                         </li>
                                     }
 
@@ -89,7 +115,7 @@
                             <div>
                                 <h4 class="justify-content-between " />
                                 <span class="text-info">Payment method:</span>
-                                <div aria-label="Basic radio toggle button group">
+                                <div class="radio-container" aria-label="Basic radio toggle button group">
                                     <div>
                                         <input type="radio" class="btn-check" name="payMethod" id="btnradio1" value="vnpay" autocomplete="off">
                                         <label class="w-100 btn btn-outline-primary" for="btnradio1"><img src="/images/pttt/vnpay.svg" />Cổng thanh toán VNPay</label>
@@ -116,6 +142,7 @@
                     </div>
                     <div class="col-12 col-md-4">
                         <button type="submit" value="Place Order" class="btn btn-primary form-control">Place Order</button>
+                        <span>9704198526191432198</span>
                     </div>
                 </div>
             </div>
@@ -126,4 +153,83 @@
 @section Scripts {
     <script src="~/js/summary.js"></script>
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            $.ajax({
+                url: 'https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/province',
+                type: 'GET',
+                headers: {
+                    'token': 'ac622677-de94-11ed-ab31-3eeb4194879e'
+                },
+                dataType: 'json',
+                success: function (data) {
+                    data = data.data;
+                    // Loop through the data and create option elements for each item
+                    for (var i = 0; i < data.length; i++) {
+                        var option = $('<option>');
+                        option.val(data[i].ProvinceID);
+                        option.text(data[i].ProvinceName);
+                        $('#province').append(option);
+                    }
+                }
+            });
+
+
+
+            $('#province').on('change', function () {
+                $("#iprovince").val($("#province option:selected").text());
+                var selectedProvince = $(this).val();
+                $.ajax({
+                    type: 'GET',
+                    url: 'https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/district',
+                    headers: {
+                        'token': 'ac622677-de94-11ed-ab31-3eeb4194879e'
+                    },
+                    data: { province_id: selectedProvince },
+                    success: function (response) {
+                        $('#divDistrict').show();
+                        data = response.data;
+                        for (var i = 0; i < data.length; i++) {
+                            var option = $('<option>');
+                            option.val(data[i].DistrictID);
+                            option.text(data[i].DistrictName);
+                            $('#district').append(option);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        // handle error response
+                    }
+                });
+            });
+            $('#district').on('change', function () {
+                $("#idistrict").val($("#district option:selected").text());
+                var selectedProvince = $(this).val();
+                $.ajax({
+                    type: 'GET',
+                    url: 'https://dev-online-gateway.ghn.vn/shiip/public-api/master-data/ward',
+                    headers: {
+                        'token': 'ac622677-de94-11ed-ab31-3eeb4194879e'
+                    },
+                    data: { district_id: selectedProvince },
+                    success: function (response) {
+                        $('#divWard').show();
+                        data = response.data;
+                        for (var i = 0; i < data.length; i++) {
+                            var option = $('<option>');
+                            option.val(data[i].WardID);
+                            option.text(data[i].WardName);
+                            $('#ward').append(option);
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        // handle error response
+                    }
+                });
+            });
+
+            $('#ward').on('change', function () {
+                $("#iward").val($("#ward option:selected").text());
+            });
+        });
+    </script>
 }

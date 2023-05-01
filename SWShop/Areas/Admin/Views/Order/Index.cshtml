@@ -27,10 +27,10 @@
 }
 
 <div class="card shadow border-0 my-4">
-    <div class="card-header bg-secondary bg-gradient m-lg-0 py-3">
+    <div class="card-header bg-info bg-gradient m-lg-0 py-3">
         <div class="row">
             <div class="col-12 text-center">
-                <h2 class="text-white py-2">Order List</h2>
+                <h2 class="text-white py-2">Danh sách đặt hàng</h2>
             </div>
         </div>
     </div>
@@ -39,44 +39,44 @@
             <span>
 
             </span>
-            <ul class="list-group list-group-horizontal-sm">
+            <ul class="list-group list-group-horizontal-sm pointer-events">
                 <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="inprocess">
-                <li class="list-group-item @inprocess">In Process</li>
+                <li class="list-group-item @inprocess">Đang Tiến Hành</li>
                 </a>
                 <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="pending">
-                <li class="list-group-item @pending">Payment Pending</li>
+                <li class="list-group-item @pending">Đang Chờ Thanh Toán</li>
                 </a>
                 <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="completed">
-                <li class="list-group-item @completed">Completed</li>
+                <li class="list-group-item @completed">Đã Hoàn Thành</li>
                 </a>
                 <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="approved">
-                <li class="list-group-item @approved">Approved</li>
+                <li class="list-group-item @approved">Đã Chấp Thuận</li>
                 </a>
                 <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="all">
-                <li class="list-group-item @all">All</li>
+                <li class="list-group-item @all">Tất Cả</li>
                 </a>
             </ul>
         </div>
-        <table id="tblData" class="table table-striped table-light" style="width:100%">
+        <table id="tblData" class="table table-secondary" style="width:100%">
             <thead>
                 <tr>
                     <th>
                         ID
                     </th>
                     <th>
-                        Name
+                        Tên
                     </th>
                     <th>
-                        Phone Number
+                        Số điện thoại
                     </th>
                     <th>
                         Email
                     </th>
                     <th>
-                        Status
+                        Trạng thái
                     </th>
                     <th>
-                        Total
+                        Tổng
                     </th>
                     <th></th>
                 </tr>
@@ -86,5 +86,19 @@
 </div>
 
 @section Scripts{
-    <script src="~/js/order.js"></script>
+    <script src="~/admin/assets/js/order.js"></script>
+    <script>
+        // Set a timeout to add the "text-light" class after 1 second
+        setTimeout(() => {
+            var elements = document.querySelectorAll('[aria-controls="tblData"]');
+            for (let i = 0; i < elements.length; i++) {
+                elements[i].classList.add('text-light'); // Add the "text-light" class to the element
+            }
+
+            var elements2 = document.querySelectorAll('thead');
+            for (let i = 0; i < elements2.length; i++) {
+                elements2[i].classList.add('bg-primary');
+            }
+        }, 10);
+    </script>
 }

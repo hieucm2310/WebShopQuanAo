@@ -1,4 +1,5 @@
-﻿using SWShop.DataAccess.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using SWShop.DataAccess.Data;
 using SWShop.DataAccess.Repository.IRepository;
 using SWShop.Models;
 using System;
@@ -16,20 +17,107 @@ namespace SWShop.DataAccess.Repository
         {
             _db = db;
         }
+
+        public async Task<List<Product>> GetProductsAsync()
+        {
+            return await _db.Products.ToListAsync();
+        }
+        public async Task<List<Product>> GetProductsAsync(string searchTerm, int pageNumber, int pageSize, int? category, decimal? minPrice = null, decimal? maxPrice = null, string? size = null, string? includeProperties = null)
+        {
+            var query = _db.Products.AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                query = query.Where(p => p.Name.Contains(searchTerm) || p.Description.Contains(searchTerm) || p.Brand.Contains(searchTerm));
+            }
+
+            if (category.HasValue)
+            {
+                query = query.Where(p => p.CategoryId == category);
+            }
+
+            if (minPrice.HasValue)
+            {
+                query = query.Where(p => p.Price >= minPrice.Value || p.SalePrice >= minPrice.Value);
+            }
+
+            if (maxPrice.HasValue)
+            {
+                query = query.Where(p => p.Price <= maxPrice.Value || (p.SalePrice <= maxPrice.Value && p.SalePrice != 0));
+            }
+
+            if (!string.IsNullOrEmpty(size))
+            {
+                var listSize = size.Split(',');
+                query = query.Where(p => p.Sizes.Any(s => listSize.Contains(s.Name)));
+            }
+
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var includeProp in includeProperties
+                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProp);
+                }
+            }
+
+            return await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+        }
+        public async Task<int> GetProductsCountAsync(string searchTerm, int pageNumber, int pageSize, int? category, decimal? minPrice = null, decimal? maxPrice = null, string? size = null, string? includeProperties = null)
+        {
+            var query = _db.Products.AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                query = query.Where(p => p.Name.Contains(searchTerm) || p.Description.Contains(searchTerm) || p.Brand.Contains(searchTerm));
+            }
+
+            if (category.HasValue)
+            {
+                query = query.Where(p => p.CategoryId == category);
+            }
+
+            if (minPrice.HasValue)
+            {
+                query = query.Where(p => p.Price >= minPrice.Value || p.SalePrice >= minPrice.Value);
+            }
+
+            if (maxPrice.HasValue)
+            {
+                query = query.Where(p => p.Price <= maxPrice.Value || (p.SalePrice <= maxPrice.Value && p.SalePrice != 0));
+            }
+
+            if (!string.IsNullOrEmpty(size))
+            {
+                var listSize = size.Split(',');
+                query = query.Where(p => p.Sizes.Any(s => listSize.Contains(s.Name) ));
+            }
+
+            if (!string.IsNullOrEmpty(includeProperties))
+            {
+                foreach (var includeProp in includeProperties
+                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    query = query.Include(includeProp);
+                }
+            }
+
+            return await query.CountAsync();
+        }
+
         public void Update(Product obj)
         {
-            var objFromDb = _db.Products.FirstOrDefault(u=>u.Id == obj.Id);
+            var objFromDb = _db.Products.FirstOrDefault(u => u.Id == obj.Id);
             if (objFromDb != null)
             {
-                objFromDb.Title = obj.Title;
-                objFromDb.ISBN = obj.ISBN;
+                objFromDb.Name = obj.Name;
+                objFromDb.Brand = obj.Brand;
                 objFromDb.Price = obj.Price;
-                objFromDb.Price50 = obj.Price50;
+                objFromDb.SalePrice = obj.SalePrice;
                 objFromDb.ListPrice = obj.ListPrice;
-                objFromDb.Price100 = obj.Price100;
                 objFromDb.Description = obj.Description;
                 objFromDb.CategoryId = obj.CategoryId;
-                objFromDb.Author = obj.Author;
+                objFromDb.QuantityRemain = obj.QuantityRemain;
                 objFromDb.ProductImages = obj.ProductImages;
             }
         }

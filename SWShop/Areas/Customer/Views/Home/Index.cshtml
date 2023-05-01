@@ -1,6 +1,6 @@
-﻿@model IEnumerable<Product>
+﻿@model HomeVM
 
-<div class="row pb-3">
+@*<div class="row pb-3">
     @foreach (var product in Model)
     {
         <div class="col-lg-3 col-sm-6">
@@ -15,19 +15,18 @@
                         {
                             <img src="https://placehold.co/500x600/png" class="card-img-top rounded" />
                         }
-@*                        <img src="@product.ImageUrl" class="card-img-top rounded" />*@
                         <div class="card-body pb-0">
                             <div class="pl-1">
                                 <p class="card-title h5 text-dark border-opacity-75 text-uppercase text-center">
-                                    @product.Title
+                                    @product.Name
                                 </p>
                                 <p class="card-title text-warning text-center">
-                                    by <b>@product.Author</b>
+                                    by <b>@product.Brand</b>
                                 </p>
                             </div>
                             <div class="pl-1">
                                 <p class="text-dark text-opacity-75 text-center">
-                                    List Price: 
+                                    Giá niêm yết:
                                     <span class="text-decoration-line-through">
                                         @product.ListPrice.ToString("c")
                                     </span>
@@ -35,9 +34,9 @@
                             </div>
                             <div class="pl-1">
                                 <p class="text-dark text-opacity-75 text-center">
-                                    As low as: 
+                                    Giảm còn:
                                     <span>
-                                        @product.Price100.ToString("c")
+                                        @product.Price2.ToString("c")
                                     </span>
                                 </p>
                             </div>
@@ -55,3 +54,499 @@
         </div>
     }
 </div>
+*@
+
+
+
+
+<body>
+    <!-- Categories Section Begin -->
+    <section class="categories">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-6 p-0">
+                    <div class="categories__item categories__large__item set-bg"
+                         data-setbg="img/categories/category-1.jpg">
+                        <div class="categories__text">
+                            <h1>Vasity</h1>
+                            <p>
+                                Giới thiệu xu hướng thời trang thể thao mới nhất: trang phục varsity. Nâng cao phong cách thời trang hàng ngày của bạn với bộ sưu tập áo khoác, áo hoodie
+                                và quần sweatpants varsity của chúng tôi. Được làm từ các vật liệu cao cấp, trang phục varsity của chúng tôi vừa thoải mái vừa bền, hoàn hảo cho cả trong và ngoài sân bóng.
+                            </p>
+                            <a href="@Url.Action("Index", "Shop", new { category = 1})">Mua ngay</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-6 p-0">
+                            <div class="categories__item set-bg" data-setbg="img/categories/category-2.jpg">
+                                <div class="categories__text">
+                                    <h4>T Shirt</h4>
+                                    <a href="@Url.Action("Index", "Shop", new { category = 1})">Mua ngay</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 p-0">
+                            <div class="categories__item set-bg" data-setbg="img/categories/category-3.jpg">
+                                <div class="categories__text">
+                                    <h4>Túi</h4>
+                                    <a href="@Url.Action("Index", "Shop", new { category = 4})">Mua ngay</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 p-0">
+                            <div class="categories__item set-bg" data-setbg="img/categories/category-4.jpg">
+                                <div class="categories__text">
+                                    <h4>Quần jean</h4>
+                                    <a href="@Url.Action("Index", "Shop", new { category = 2})">Mua ngay</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 p-0">
+                            <div class="categories__item set-bg" data-setbg="img/categories/category-5.jpg">
+                                <div class="categories__text">
+                                    <h4>Giày</h4>
+                                    <a href="@Url.Action("Index", "Shop", new { category = 3})">Mua ngay</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Categories Section End -->
+    <!-- Product Section Begin -->
+    <section class="product spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-4">
+                    <div class="section-title">
+                        <h4>Sản phẩm mới</h4>
+                    </div>
+                </div>
+                <div class="col-lg-8 col-md-8">
+                    <ul class="filter__controls">
+                        <li class="active" data-filter="*">All</li>
+                        @foreach (var category in Model.CategoryList)
+                        {
+                            <li data-filter=".@category.Text">@category.Text</li>
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="row property__gallery">
+                @foreach (var product in Model.ProductList)
+                {
+                    <div class="col-lg-3 col-md-4 col-sm-6 mix @(product.Category.Name)">
+                        <div class="product__item @(product.SalePrice != 0?"sale":"")">
+                            @if (product.ProductImages != null && product.ProductImages.Count() > 0)
+                            {
+                                <div class="product__item__pic set-bg" data-setbg="@product.ProductImages.FirstOrDefault().ImageUrl.Replace("\\", "/")">
+                                    @if (product.QuantityRemain == 0)
+                                    {
+                                        <div class="label stockout" style="background: #111111;">hết hàng</div>
+                                    }
+                                    else if ((DateTime.Now - product.CreatedDate).Days < 7)
+                                    {
+                                        <div class="label new" style="background: #36a300;">Mới</div>
+                                    }
+                                    else if (product.SalePrice != 0)
+                                    {
+                                        <div class="label sale">Sale</div>
+                                    }
+
+                                    <ul class="product__hover">
+                                        <li><a href="@product.ProductImages.FirstOrDefault().ImageUrl.Replace("\\", "/")" class="image-popup"><span class="arrow_expand"></span></a></li>
+                                        <li class="liLike" data-productId="@product.Id" data-isLike="@(!product.IsLike)">
+                                            <a href="#">
+                                                @if (product.IsLike)
+                                                {
+                                                    <span class="icon_heart"></span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="icon_heart_alt"></span>
+                                                }
+                                                </a>
+                                         </li>
+                                        <li>
+                                            <a asp-action="Details"
+                                       asp-route-productId="@product.Id"><span class="icon_bag_alt"></span></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="product__item__pic set-bg" data-setbg="https://placehold.co/500x600/png">
+                                    @if (product.QuantityRemain == 0)
+                                    {
+                                        <div class="label stockout" style="background: #111111;">hết hàng</div>
+                                    }
+                                    else if ((DateTime.Now - product.CreatedDate).Days < 7)
+                                    {
+                                        <div class="label new" style="background: #36a300;">Mới</div>
+                                    }
+                                    else if (product.SalePrice != 0)
+                                    {
+                                        <div class="label sale">Sale</div>
+                                    }
+
+                                    <ul class="product__hover">
+                                        <li><a href="https://placehold.co/500x600/png" class="image-popup"><span class="arrow_expand"></span></a></li>
+                                        <li class="liLike" data-productId="@product.Id" data-isLike="@(!product.IsLike)">
+                                            <a href="#">
+                                                @if (product.IsLike)
+                                                {
+                                                    <span class="icon_heart"></span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="icon_heart_alt"></span>
+                                                }
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a asp-action="Details"
+                                       asp-route-productId="@product.Id"><span class="icon_bag_alt"></span></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            }
+                            <div class="product__item__text">
+                                <h6>
+                                    <a asp-action="Details"
+                                   asp-route-productId="@product.Id">@product.Name</a>
+                                </h6>
+                                <div class="rating">
+                                    @for (int i = 0; i < 5; i++)
+                                    {
+                                        if (i < product.Star)
+                                        {
+                                            <i class="fa fa-star"></i>
+                                        }
+                                        else
+                                        {
+                                            <i class="fa fa-star-o"></i>
+                                        }
+                                    }
+                                </div>
+                                @if (product.SalePrice != 0)
+                                {
+                                    <div class="product__price">@product.SalePrice.ToString("C0", new System.Globalization.CultureInfo("vi-VN")).Replace(" ", "") <span> @product.ListPrice.ToString("C0", new System.Globalization.CultureInfo("vi-VN")).Replace(" ", "")</span></div>
+                                }
+                                else
+                                {
+                                    <div class="product__price">@product.Price.ToString("C0", new System.Globalization.CultureInfo("vi-VN")).Replace(" ", "")</div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </section>
+    <!-- Product Section End -->
+    <!-- Banner Section Begin -->
+    <section class="banner set-bg" data-setbg="img/banner/banner-1.jpg">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-7 col-lg-8 m-auto">
+                    <div class="banner__slider owl-carousel">
+                        <div class="banner__item">
+                            <div class="banner__text">
+                                <span>The Chloe Collection</span>
+                                <h1>The Project Jacket</h1>
+                                <a href="#">Shop now</a>
+                            </div>
+                        </div>
+                        <div class="banner__item">
+                            <div class="banner__text">
+                                <span>The Chloe Collection</span>
+                                <h1>The Project Jacket</h1>
+                                <a href="#">Shop now</a>
+                            </div>
+                        </div>
+                        <div class="banner__item">
+                            <div class="banner__text">
+                                <span>The Chloe Collection</span>
+                                <h1>The Project Jacket</h1>
+                                <a href="#">Shop now</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Banner Section End -->
+    <!-- Trend Section Begin -->
+    <section class="trend spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-4 col-sm-6">
+                    <div class="trend__content">
+                        <div class="section-title">
+                            <h4>Thịnh hành</h4>
+                        </div>
+                        @foreach (var product in Model.HotTrend)
+                        {
+                            <div class="trend__item">
+                                <div class="trend__item__pic">
+                                    <img width="90px" height="90px" src="@(product.ProductImages.Count == 0?"https//placehold.co/500x600/png":product.ProductImages.FirstOrDefault().ImageUrl.Replace("\\", "/" ))" alt="">
+                                </div>
+                                <div class="trend__item__text">
+                                    <h6>@product.Name</h6>
+                                    <div class="rating">
+                                        @for (int i = 0; i < 5; i++)
+                                        {
+                                            if (i < product.Star)
+                                            {
+                                                <i class="fa fa-star"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fa fa-star-o"></i>
+                                            }
+                                        }
+                                    </div>
+                                    <div class="product__price">$ @product.Price.ToString("C0", new System.Globalization.CultureInfo("vi-VN")).Replace(" ", "")</div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6">
+                    <div class="trend__content">
+                        <div class="section-title">
+                            <h4>Bán chạy</h4>
+                        </div>
+                        @foreach (var product in Model.BestSeller)
+                        {
+                            <div class="trend__item">
+                                <div class="trend__item__pic">
+                                    <img width="90px" height="90px" src="@(product.ProductImages.Count == 0?"https//placehold.co/500x600/png":product.ProductImages.FirstOrDefault().ImageUrl.Replace("\\", "/" ))" alt="">
+                                </div>
+                                <div class="trend__item__text">
+                                    <h6>@product.Name</h6>
+                                    <div class="rating">
+                                        @for (int i = 0; i < 5; i++)
+                                        {
+                                            if (i < product.Star)
+                                            {
+                                                <i class="fa fa-star"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fa fa-star-o"></i>
+                                            }
+                                        }
+                                    </div>
+                                    <div class="product__price">$ @product.Price.ToString("C0", new System.Globalization.CultureInfo("vi-VN")).Replace(" ", "")</div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-4 col-sm-6">
+                    <div class="trend__content">
+                        <div class="section-title">
+                            <h4>Siêu giảm giá</h4>
+                        </div>
+                        @foreach (var product in Model.SuperSale)
+                        {
+                            <div class="trend__item">
+                                <div class="trend__item__pic">
+                                    <img width="90px" height="90px" src="@(product.ProductImages.Count == 0?"https//placehold.co/500x600/png":product.ProductImages.FirstOrDefault().ImageUrl.Replace("\\", "/" ))" alt="">
+                                </div>
+                                <div class="trend__item__text">
+                                    <h6>@product.Name</h6>
+                                    <div class="rating">
+                                        @for (int i = 0; i < 5; i++)
+                                        {
+                                            if (i < product.Star)
+                                            {
+                                                <i class="fa fa-star"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fa fa-star-o"></i>
+                                            }
+                                        }
+                                    </div>
+                                    <div class="product__price">$ @product.Price.ToString("C0", new System.Globalization.CultureInfo("vi-VN")).Replace(" ", "")</div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Trend Section End -->
+    <!-- Discount Section Begin -->
+    <section class="discount">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 p-0">
+                    <div class="discount__pic">
+                        <img src="img/discount.jpg" alt="">
+                    </div>
+                </div>
+                <div class="col-lg-6 p-0">
+                    <div class="discount__text">
+                        <div class="discount__text__title">
+                            <span>Discount</span>
+                            <h2>Summer 2019</h2>
+                            <h5><span>Sale</span> 50%</h5>
+                        </div>
+                        <div class="discount__countdown" id="countdown-time">
+                            <div class="countdown__item">
+                                <span>22</span>
+                                <p>Days</p>
+                            </div>
+                            <div class="countdown__item">
+                                <span>18</span>
+                                <p>Hour</p>
+                            </div>
+                            <div class="countdown__item">
+                                <span>46</span>
+                                <p>Min</p>
+                            </div>
+                            <div class="countdown__item">
+                                <span>05</span>
+                                <p>Sec</p>
+                            </div>
+                        </div>
+                        <a asp-controller="Shop" asp-action="Index">Mua ngay</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Discount Section End -->
+    <!-- Services Section Begin -->
+    <section class="services spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="services__item">
+                        <i class="fa fa-car"></i>
+                        <h6>Free Shipping</h6>
+                        <p>For all oder over $99</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="services__item">
+                        <i class="fa fa-money"></i>
+                        <h6>Money Back Guarantee</h6>
+                        <p>If good have Problems</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="services__item">
+                        <i class="fa fa-support"></i>
+                        <h6>Online Support 24/7</h6>
+                        <p>Dedicated support</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="services__item">
+                        <i class="fa fa-headphones"></i>
+                        <h6>Payment Secure</h6>
+                        <p>100% secure payment</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Services Section End -->
+    <!-- Instagram Begin -->
+    <div class="instagram">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-2 col-md-4 col-sm-4 p-0">
+                    <div class="instagram__item set-bg" data-setbg="img/instagram/insta-6.jpg">
+                        <div class="instagram__text">
+                            <i class="fa fa-instagram"></i>
+                            <a href="#">SWShop</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-4 p-0">
+                    <div class="instagram__item set-bg" data-setbg="img/instagram/insta-2.jpg">
+                        <div class="instagram__text">
+                            <i class="fa fa-instagram"></i>
+                            <a href="#">SWShop</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-4 p-0">
+                    <div class="instagram__item set-bg" data-setbg="img/instagram/insta-3.jpg">
+                        <div class="instagram__text">
+                            <i class="fa fa-instagram"></i>
+                            <a href="#">SWShop</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-4 p-0">
+                    <div class="instagram__item set-bg" data-setbg="img/instagram/insta-4.jpg">
+                        <div class="instagram__text">
+                            <i class="fa fa-instagram"></i>
+                            <a href="#">SWShop</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-4 p-0">
+                    <div class="instagram__item set-bg" data-setbg="img/instagram/insta-3.jpg">
+                        <div class="instagram__text">
+                            <i class="fa fa-instagram"></i>
+                            <a href="#">SWShop</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-sm-4 p-0">
+                    <div class="instagram__item set-bg" data-setbg="img/instagram/insta-6.jpg">
+                        <div class="instagram__text">
+                            <i class="fa fa-instagram"></i>
+                            <a href="#">SWShop</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Instagram End -->
+
+
+</body>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+
+            $('.liLike').click(function () {
+                debugger;
+                var productId = $(this).data('productid');
+                var isLike = $(this).data('islike');
+                    $.ajax({
+                        type: "POST",
+                        url: "/Customer/Home/Like",
+                        data: {
+                        productId: productId,
+                        isLike: isLike
+                        },
+                        success: function (data) {
+                            console.log("Like updated successfully.");
+                        location.reload();
+                        },
+                        error: function (xhr, status, error) {
+                            console.log("An error occurred while updating the like.");
+                        }
+                    });
+            });
+        });
+    </script>
+}

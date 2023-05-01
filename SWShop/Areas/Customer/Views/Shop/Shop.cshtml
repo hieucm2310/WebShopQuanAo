@@ -1,0 +1,15 @@
+﻿@model List<Product>
+
+<form action="@Url.Action("Index", "Product")" method="get">
+    <div class="form-group">
+        <label for="searchTerm">Search:</label>
+        <input type="text" name="searchTerm" value="@ViewData["SearchTerm"]" class="form-control" />
+    </div>
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+
+
+
+<table class="table">
+    <thead>
+        <tr>

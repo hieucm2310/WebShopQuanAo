@@ -26,6 +26,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<IVnPayService, VnPayService>();
+builder.Services.AddScoped<IGHNService, GHNService>();
 builder.Services.AddHttpClient();
 
 builder.Services.AddAuthentication().AddFacebook(option =>

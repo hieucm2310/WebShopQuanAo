@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using SWShop.Ultility;
 
 namespace SWShop.Areas.Identity.Pages.Account
 {
@@ -115,6 +116,10 @@ namespace SWShop.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+                    if (User.IsInRole(SD.Role_Admin))
+                    {
+                        return RedirectToAction("Index", "Home", new { area = "Admin" });
+                    }
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)

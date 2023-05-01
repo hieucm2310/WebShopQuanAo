@@ -1,21 +1,21 @@
 ﻿@model RoleManagmentVM
 
 <div class="card shadow border-0 mt-4">
-    <div class="card-header bg-secondary bg-gradient m-lg-0 py-3">
+    <div class="card-header bg-info bg-gradient m-lg-0 py-3">
         <div class="row">
             <div class="col-12 text-center">
-                <h2 class="text-white py-2">Manage User Role</h2>
+                <h2 class="text-white py-2">Quản lý vai trò use</h2>
             </div>
         </div>
     </div>
     <div class="card-body p-4">
-        <form method="post" class="row">
+        <form method="post" >
             <input asp-for="ApplicationUser.Id" hidden />
             <div class="border p-3">
                 <div asp-validation-summary="ModelOnly"></div>
                 <div class="form-floating py-2 col-12">
-                    <input asp-for="ApplicationUser.Name" readonly class="form-control border-0 shadow" />
                     <label asp-for=ApplicationUser.Name class="ms-2"></label>
+                    <input asp-for="ApplicationUser.Name" readonly class="form-control border-0 shadow" />
                 </div>
                 <div class="form-floating py-2 col-12">
                     <select asp-for="ApplicationUser.Role" asp-items="@Model.RoleList" class="form-select">
@@ -24,11 +24,11 @@
                 </div>
                 <div class="row mt-3">
                     <div class="col-6 col-md-3">
-                        <button type="submit" class="btn btn-primary form-control">Update Role</button>
+                        <button type="submit" class="btn btn-primary form-control">Cập nhật vai trò</button>
                     </div>
                     <div class="col-6 col-md-3">
                         <a asp-controller="Index" asp-action="Index" class="btn btn-outline-primary form-control">
-                            Back to List
+                            Trở lại danh sách
                         </a>
                     </div>
                 </div>
@@ -43,4 +43,14 @@
     @{
         <partial name="_ValidationScriptsPartial" />
     }
+    <script>
+
+        // Set a timeout to add the "text-light" class after 1 second
+        setTimeout(() => {
+            var elements = document.querySelectorAll('[aria-controls="tblData"]');
+            for (let i = 0; i < elements.length; i++) {
+                elements[i].classList.add('text-light'); // Add the "text-light" class to the element
+            }
+        }, 10);
+    </script>
 }

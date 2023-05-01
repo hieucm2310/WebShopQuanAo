@@ -2,6 +2,7 @@
 
 <form method="post">
     <input asp-for="OrderHeader.Id" hidden />
+    <input asp-for="OrderHeader.OrderTotal" hidden />
     <br />
     <div class="container">
         <div class="card">
@@ -57,26 +58,54 @@
                                 <div class="col-9">
                                     @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
                                     {
-                                        <input asp-for="OrderHeader.StreetAddress" type="text" class="form-control" />
-                                        <span asp-validation-for="OrderHeader.StreetAddress" class="text-danger"></span>
+                                        <input asp-for="OrderHeader.Address" type="text" class="form-control" />
+                                        <span asp-validation-for="OrderHeader.Address" class="text-danger"></span>
                                     }
                                     else
                                     {
-                                        <input asp-for="OrderHeader.StreetAddress" readonly type="text" class="form-control" />
+                                        <input asp-for="OrderHeader.Address" readonly type="text" class="form-control" />
                                     }
                                 </div>
                             </div>
                             <div class="row my-1">
-                                <div class="col-3">City</div>
+                                <div class="col-3">Ward</div>
                                 <div class="col-9">
                                     @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
                                     {
-                                        <input asp-for="OrderHeader.City" type="text" class="form-control" />
-                                        <span asp-validation-for="OrderHeader.City" class="text-danger"></span>
+                                        <input asp-for="OrderHeader.Ward" type="text" class="form-control" />
+                                        <span asp-validation-for="OrderHeader.Ward" class="text-danger"></span>
                                     }
                                     else
                                     {
-                                        <input asp-for="OrderHeader.City" readonly type="text" class="form-control" />
+                                        <input asp-for="OrderHeader.Ward" readonly type="text" class="form-control" />
+                                    }
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-3">District</div>
+                                <div class="col-9">
+                                    @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+                                    {
+                                        <input asp-for="OrderHeader.District" type="text" class="form-control" />
+                                        <span asp-validation-for="OrderHeader.District" class="text-danger"></span>
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="OrderHeader.District" readonly type="text" class="form-control" />
+                                    }
+                                </div>
+                            </div>
+                            <div class="row my-1">
+                                <div class="col-3">Province</div>
+                                <div class="col-9">
+                                    @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
+                                    {
+                                        <input asp-for="OrderHeader.Province" type="text" class="form-control" />
+                                        <span asp-validation-for="OrderHeader.Province" class="text-danger"></span>
+                                    }
+                                    else
+                                    {
+                                        <input asp-for="OrderHeader.Province" readonly type="text" class="form-control" />
                                     }
                                 </div>
                             </div>
@@ -179,12 +208,12 @@
                                         <div class="row container">
                                             <div class="col-8">
 
-                                                <h6 class="my-0 text-primary">@detail.Product.Title</h6>
-                                                <small class="text-muted">Price : @detail.Product.Price.ToString("c")</small><br />
+                                                <h6 class="my-0 text-primary">@detail.Product.Name</h6>
+                                                <small class="text-muted">Price : @detail.Product.Price.ToString("C0", new System.Globalization.CultureInfo("vi-VN")).Replace(" ", "")</small><br />
                                                 <small class="text-muted">Quantity : @detail.Count</small>
                                             </div>
                                             <div class="col-4 text-end">
-                                                <p class="text-success">@((detail.Count * detail.Price).ToString("c"))</p>
+                                                <p class="text-success">@((detail.Count * detail.Price).ToString("C0", new System.Globalization.CultureInfo("vi-VN")).Replace(" ", ""))</p>
                                             </div>
                                         </div>
                                     </li>
@@ -195,7 +224,7 @@
                                             <h5 class="text-white">TOTAL </h5>
                                         </div>
                                         <div class="col-6 text-end">
-                                            <h5 class="text-white">@Model.OrderHeader.OrderTotal.ToString("c")</h5>
+                                            <h5 class="text-white">@Model.OrderHeader.OrderTotal.ToString("C0", new System.Globalization.CultureInfo("vi-VN")).Replace(" ", "")</h5>
                                         </div>
                                     </div>
                                 </li>
@@ -211,8 +240,8 @@
                                     <button type="submit" asp-action="ShipOrder" onclick="return validateInput();" class="btn btn-primary form-control my-1">Ship Order</button>
                                 }
                                 @if (Model.OrderHeader.OrderStatus != SD.StatusRefunded &&
-                               Model.OrderHeader.OrderStatus != SD.StatusCancelled &&
-                               Model.OrderHeader.OrderStatus != SD.StatusShipped)
+                                        Model.OrderHeader.OrderStatus != SD.StatusCancelled &&
+                                        Model.OrderHeader.OrderStatus != SD.StatusShipped)
                                 {
                                     <button onclick="comingsoon()" type="button" class="btn btn-danger form-control my-1 coming-soon-button">Cancel Order</button>
                                 }
@@ -228,6 +257,15 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
     <script>
+        setTimeout(() => {
+            debugger;
+            $('input').each(function () {
+                if ($(this).prop('readonly')) {
+                    $(this).css('background-color', 'black');
+                }
+            });
+        }, 10);
+
         function validateInput(){
             if(document.getElementById("trackingNumber").value == ""){
                 Swal.fire({

@@ -1,0 +1,99 @@
+﻿@{
+    var status = Context.Request.Query["status"];
+    var pending = "text-primary";
+    var inprocess = "text-primary";
+    var completed = "text-primary";
+    var approved = "text-primary";
+    var all = "text-primary";
+
+    switch (status)
+    {
+        case "pending":
+            pending = "active text-white bg-primary";
+            break;
+        case "inprocess":
+            inprocess = "active text-white bg-primary";
+            break;
+        case "completed":
+            completed = "active text-white bg-primary";
+            break;
+        case "approved":
+            approved = "active text-white bg-primary";
+            break;
+        default:
+            all = "active text-white bg-primary";
+            break;
+    }
+}
+
+<div class="card shadow border-0 my-4">
+    <div class="card-header bg-info bg-gradient m-lg-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">Danh sách đặt hàng</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-4">
+        <div class="d-flex justify-content-between pb-5 pt-2">
+            <span>
+
+            </span>
+            <ul class="list-group list-group-horizontal-sm pointer-events">
+                <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="inprocess">
+                <li class="list-group-item @inprocess">Đang Tiến Hành</li>
+                </a>
+                <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="pending">
+                <li class="list-group-item @pending">Đang Chờ Thanh Toán</li>
+                </a>
+                <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="completed">
+                <li class="list-group-item @completed">Đã Hoàn Thành</li>
+                </a>
+                <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="approved">
+                <l class="list-group-item @approved">Đã Chấp Thuận</l>
+                </a>
+                <a style="text-decoration:none;" asp-controller="Order" asp-action="Index" asp-route-status="all">
+                <li class="list-group-item @all">Tất Cả</li>
+                </a>
+            </ul>
+        </div>
+        <table id="tblData" class="table table-secondary" style="width:100%">
+            <thead>
+                <tr>
+                    <th>
+                        ID
+                    </th>
+                    <th>
+                        Tên
+                    </th>
+                    <th>
+                        Số điện thoại
+                    </th>
+                    <th>
+                        Email
+                    </th>
+                    <th>
+                        Trạng thái
+                    </th>
+                    <th>
+                        Tổng
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/js/order.js"></script>
+    <script>
+        // Set a timeout to add the "text-light" class after 1 second
+        setTimeout(() => {
+            var elements2 = document.querySelectorAll('thead');
+            for (let i = 0; i < elements2.length; i++) {
+                elements2[i].classList.add('bg-primary');
+            }
+        }, 10);
+    </script>
+}

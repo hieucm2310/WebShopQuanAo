@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Data;
 using System.Drawing.Printing;
+using System.Security.Claims;
 
 namespace SWShop.Areas.Admin.Controllers
 {
@@ -142,11 +143,56 @@ namespace SWShop.Areas.Admin.Controllers
             return RedirectToAction(nameof(Upsert), new {id= productId });
         }
 
+        [HttpPost]
+        public IActionResult AddSizeAmount(int productId, string sizeName, int amount)
+        {
+            if (!string.IsNullOrEmpty(sizeName))
+            {
+                var size = new Size
+                {
+                    ProductId = productId,
+                    Name = sizeName,
+                    Amount = amount
+                };
+
+                Size sizeFromDb = _unitOfWork.Size.Get(u => u.Name == sizeName && u.ProductId == productId);
+
+                if (sizeFromDb != null)
+                {
+                    sizeFromDb.Amount += amount;
+                    _unitOfWork.Size.Update(sizeFromDb);
+                    _unitOfWork.Save();
+                }
+                else
+                {
+                    _unitOfWork.Size.Add(size);
+                    _unitOfWork.Save();
+                }
+                TempData["success"] = "Size update successfully";
+
+                return Ok();
+            }
+            else
+            {
+                return Ok();
+            }
+        }
+
+
         #region API CALLS
         [HttpGet]
         public IActionResult GetAll()
         {
             List<Product> objProductList = _unitOfWork.Product.GetAll(includeProperties: "Category").ToList();
+            foreach (var product in objProductList)
+            {
+                product.QuantitySold = _unitOfWork.OrderDetail.GetAll(includeProperties: "OrderHeader")
+                                .Where(od => od.ProductId == product.Id && od.OrderHeader.OrderStatus != SD.StatusPending && od.OrderHeader.PaymentStatus != SD.PaymentStatusPending)
+                                .Sum(od => od.Count);
+
+                product.QuantityRemain = _unitOfWork.Size.GetAll().Where(u=>u.ProductId == product.Id).Sum(x=>x.Amount);
+                product.Sizes = null;
+            }
             return Json(new { data = objProductList });
         }
 

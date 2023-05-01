@@ -1,6 +1,6 @@
 ﻿@model ShoppingCartVM
 
-<form method="post">
+@*<form method="post">
     <br />
     <div class="card shadow border-0">
         <div class="card-header bg-secondary bg-gradient text-light ml-0 py-4">
@@ -35,7 +35,7 @@
                                 }
                             </div>
                             <div class="col-12 col-lg-6 pt-md-3">
-                                <h5 class="text-uppercase text-secondary"><strong>@item.Product.Title</strong></h5>
+                                <h5 class="text-uppercase text-secondary"><strong>@item.Product.Name</strong></h5>
                                 <p><small>@Html.Raw(item.Product.Description)</small></p>
                             </div>
                             <div class="col-12  col-lg-5 text-center row">
@@ -85,4 +85,104 @@
                 </div>
             </div>
         </div>
-</form>
+</form>*@
+
+<!-- Breadcrumb Begin -->
+<div class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__links">
+                    <a asp-area="Customer" asp-controller="Home" asp-action="Index"><i class="fa fa-home"></i> Home</a>
+                    <span>Shopping cart</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+<!-- Shop Cart Section Begin -->
+<section class="shop-cart spad">
+    <div class="container">
+        <form method="post">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="shop__cart__table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Sản phẩm</th>
+                                    <th>Giá</th>
+                                    <th>Số lượng</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.ShoppingCartList)
+                                {
+                                    <tr>
+                                        <td class="cart__product__item">
+                                            @if (item.Product.ProductImages != null && item.Product.ProductImages.Count() > 0)
+                                            {
+                                                <img width="90px" src="@item.Product.ProductImages.FirstOrDefault().ImageUrl" />
+                                            }
+                                            else
+                                            {
+                                                <img width="90px" src="https://placehold.co/500x600/png" />
+                                            }
+                                            <div class="cart__product__item__title">
+                                                <h6>@item.Product.Name</h6>
+                                            </div>
+                                        </td>
+                                        <td class="cart__price">
+                                            @if (item.Product.SalePrice != 0)
+                                            {
+                                                @item.Product.SalePrice.ToString("C0", new System.Globalization.CultureInfo("vi-VN")).Replace(" ", "")
+                                            }
+                                            else
+                                            {
+                                                @item.Product.Price.ToString("C0", new System.Globalization.CultureInfo("vi-VN")).Replace(" ", "")
+                                            }
+                                        </td>
+                                        <td >
+                                            <div>
+                                                <a asp-action="minus" asp-route-cartId="@item.Id" class="btn btn-outline-info bg-gradient py-2">
+                                                    <i class="bi bi-dash-square"></i>
+                                                </a> &nbsp;&nbsp;&nbsp;
+                                                @item.Count<span class="text-muted">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                                <a asp-action="plus" asp-route-cartId="@item.Id" class="btn btn-outline-info bg-gradient py-2">
+                                                    <i class="bi bi-plus-square"></i>
+                                                </a>
+                                            </div>
+                                        </td>
+                                        <td class="cart__close">
+                                            <a asp-action="remove" asp-route-cartId="@item.Id"><span class="icon_close"></span></a>
+
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="cart__btn">
+                    <a asp-area="Customer" asp-controller="Home" asp-action="Index" style="background-color:antiquewhite">Tiếp tục mua sắm</a>
+                </div>
+            </div>
+            <div class="col-lg-4 offset-lg-2">
+                <div class="cart__total__procced">
+                    <h6>Cart total</h6>
+                    <ul>
+                        <li>Tổng cộng <span>@Model.OrderHeader.OrderTotal.ToString("C0", new System.Globalization.CultureInfo("vi-VN")).Replace(" ", "")</span></li>
+                    </ul>
+                    <a asp-action="Summary" class="primary-btn">Tiến hành kiểm tra</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Shop Cart Section End -->
