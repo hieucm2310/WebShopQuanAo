@@ -298,7 +298,10 @@
                                     <img width="90px" height="90px" src="@(product.ProductImages.Count == 0?"https//placehold.co/500x600/png":product.ProductImages.FirstOrDefault().ImageUrl.Replace("\\", "/" ))" alt="">
                                 </div>
                                 <div class="trend__item__text">
-                                    <h6>@product.Name</h6>
+                                    <h6>
+                                        <a asp-action="Details"
+                                       asp-route-productId="@product.Id" style="color:orangered">@product.Name</a>
+                                    </h6>
                                     <div class="rating">
                                         @for (int i = 0; i < 5; i++)
                                         {
@@ -330,7 +333,10 @@
                                     <img width="90px" height="90px" src="@(product.ProductImages.Count == 0?"https//placehold.co/500x600/png":product.ProductImages.FirstOrDefault().ImageUrl.Replace("\\", "/" ))" alt="">
                                 </div>
                                 <div class="trend__item__text">
-                                    <h6>@product.Name</h6>
+                                    <h6>
+                                        <a asp-action="Details"
+                                       asp-route-productId="@product.Id" style="color:sandybrown">@product.Name</a>
+                                    </h6>
                                     <div class="rating">
                                         @for (int i = 0; i < 5; i++)
                                         {
@@ -362,7 +368,10 @@
                                     <img width="90px" height="90px" src="@(product.ProductImages.Count == 0?"https//placehold.co/500x600/png":product.ProductImages.FirstOrDefault().ImageUrl.Replace("\\", "/" ))" alt="">
                                 </div>
                                 <div class="trend__item__text">
-                                    <h6>@product.Name</h6>
+                                    <h6>
+                                        <a asp-action="Details"
+                                       asp-route-productId="@product.Id" style="color:red">@product.Name</a>
+                                    </h6>
                                     <div class="rating">
                                         @for (int i = 0; i < 5; i++)
                                         {

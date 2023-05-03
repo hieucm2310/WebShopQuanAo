@@ -46,7 +46,10 @@
     <div class="card-body p-4">
         @if (Model.Product.Id != 0)
         {
-            <button id="show-input-btn" type="button" class="btn btn-rounded btn-warning">Sửa số lượng</button>
+            <button id="show-input-btn" type="button" class="btn btn-rounded btn-warning">Thêm cỡ</button>
+            <a asp-controller="Product" asp-action="ProductSize" asp-route-productId="@Model.Product.Id" class="btn btn-rounded btn-warning">
+                Sửa cỡ
+            </a>
             <div id="input-div" class="input-container">
                 <form id="input-form">
                     <label for="input-field-1">Nhập cỡ:</label>
@@ -56,6 +59,7 @@
                     <button type="submit" id="submit-btn" class="submit-btn">Submit</button>
                 </form>
             </div>
+            
         }
         <form method="post" enctype="multipart/form-data">
             <input asp-for="Product.Id" hidden />

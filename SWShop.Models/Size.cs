@@ -1,4 +1,5 @@
-﻿using SWShop.Models.ViewModels;
+﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using SWShop.Models.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -17,6 +18,7 @@ namespace SWShop.Models
         [Required]
         public string Name { get; set; }
         public int ProductId { get; set; }
+        [ValidateNever]
         public Product Product { get; set; }
         public int Amount { get; set; }
 

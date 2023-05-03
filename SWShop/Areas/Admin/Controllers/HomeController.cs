@@ -30,6 +30,15 @@ namespace SWShop.Areas.Admin.Controllers
         }
         public IActionResult Index()
         {
+            var vnpay = _unitOfWork.OrderHeader
+                        .GetAll(u => u.OrderStatus.Equals(SD.StatusShipped) && u.PaymentStatus.Equals(SD.PaymentStatusApproved) && u.PaymentMethod.Equals(SD.VNPay))
+                        .Sum(u => u.OrderTotal);
+
+            var cod = _unitOfWork.OrderHeader
+                        .GetAll(u => u.OrderStatus.Equals(SD.StatusShipped) && u.PaymentStatus.Equals(SD.PaymentStatusDelayedPayment) && u.PaymentMethod.Equals(SD.COD))
+                        .Sum(u => u.OrderTotal);
+            var total = vnpay+cod;
+
             var rates = _unitOfWork.Rate.GetAll(includeProperties: "ApplicationUser").OrderByDescending(u=>u.Date).Take(4);
             foreach (var rate in rates)
             {
@@ -38,6 +47,11 @@ namespace SWShop.Areas.Admin.Controllers
             HomeAdminVM homeAdminVM = new HomeAdminVM()
             {
                 RateList = rates,
+                VNPay = vnpay,
+                COD = cod,
+                VNPayP = (int)Math.Round(vnpay /total*100) ,
+                CODP = (int)Math.Round(cod / total * 100),
+                Total = total
             };
             return View(homeAdminVM);
         }

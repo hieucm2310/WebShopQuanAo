@@ -11,6 +11,10 @@ namespace SWShop.Models.ViewModels
     public class HomeAdminVM
     {
         public IEnumerable<Rate> RateList { get; set; }
-
+        public int VNPayP { get; set; }
+        public decimal VNPay { get; set; }
+        public int CODP { get; set; }
+        public decimal COD { get; set; }
+        public decimal Total { get; set; }
     }
 }

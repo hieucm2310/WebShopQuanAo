@@ -1,0 +1,60 @@
+﻿@model List<Size>
+
+<div class="card shadow border-0 mt-4">
+    <div class="card-header bg-info bg-gradient m-lg-0 py-3">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h2 class="text-white py-2">Danh sách loại</h2>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-4">
+        <div class="row pb-3">
+            <div class="col-6">
+            </div>
+            <div class="col-6 text-right">
+                <a asp-controller="Category" asp-action="Create" class="btn btn-success create-new-button">
+                    <i class="bi bi-plus-circle"></i> Thêm loại mới
+                </a>
+            </div>
+        </div>
+        <table class="table table-secondary text-center">
+            <thead>
+                <tr>
+                    <th>
+                        Tên loại
+                    </th>
+                    <th>
+                        Display Order
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var obj in Model.OrderBy(m => m.Name))
+                {
+                    <tr>
+                        <td>
+                            @obj.Name
+                        </td>
+                        <td>
+                            @obj.Amount
+                        </td>
+                        <td>
+                            <div class="w-75 btn-group" role="group">
+                                <a asp-controller="Product" asp-action="ProductSizeEdit" asp-route-id="@obj.Id" class="btn btn-primary mx-2">
+                                    <i class="bi bi-pencil-square"></i> Sửa
+                                </a>
+                                <a asp-controller="Product" asp-action="ProductSizeDelete" asp-route-id="@obj.Id" class="btn btn-danger mx-2">
+                                    <i class="bi bi-trash-fill"></i> Xóa
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+    </div>
+</div>

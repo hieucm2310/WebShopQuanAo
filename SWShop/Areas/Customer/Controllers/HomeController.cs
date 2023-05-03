@@ -229,22 +229,32 @@ namespace SWShop.Areas.Customer.Controllers
         public IActionResult GetAmount(int productId, int sizeId)
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var productSize = _unitOfWork.Size.Get(u => u.Id == sizeId && u.ProductId == productId);
-            var cartsize = _unitOfWork.ShoppingCart.GetAll(u => u.ProductId == productId && u.SizeNo == sizeId, includeProperties: "ApplicationUser")
-                            .FirstOrDefault(u => u.ApplicationUserId == userId);
             int x = 0;
-            if (productSize != null)
+            var productSize = _unitOfWork.Size.Get(u => u.Id == sizeId && u.ProductId == productId);
+            if (claimsIdentity.IsAuthenticated)
             {
-                if (cartsize != null)
+                var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+                
+                var cartsize = _unitOfWork.ShoppingCart.GetAll(u => u.ProductId == productId && u.SizeNo == sizeId, includeProperties: "ApplicationUser")
+                                .FirstOrDefault(u => u.ApplicationUserId == userId);
+                
+                if (productSize != null)
                 {
-                    x = productSize.Amount - cartsize.Count;
-                }
-                else
-                {
-                    x = productSize.Amount;
+                    if (cartsize != null)
+                    {
+                        x = productSize.Amount - cartsize.Count;
+                    }
+                    else
+                    {
+                        x = productSize.Amount;
+                    }
                 }
             }
+            else
+            {
+                x = productSize.Amount;
+            }
+
             return Content("{\"x\":" + x + "}", "application/json");
         }
 
@@ -380,7 +390,7 @@ namespace SWShop.Areas.Customer.Controllers
             HttpContext.Session.SetInt32(SD.SessionLike,
                         _unitOfWork.Like.GetAll(u => u.ApplicationUserId == userId && u.IsLike == true).Count());
 
-            
+
             return Ok();
         }
 

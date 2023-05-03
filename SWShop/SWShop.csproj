@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <Content Remove="wwwroot\admin\assets\js\order.js" />
+    <Content Remove="wwwroot\js\feedback.js" />
   </ItemGroup>
 
   <ItemGroup>
@@ -756,6 +757,7 @@
     <None Include="wwwroot\js\product.js" />
     <None Include="wwwroot\js\site.js" />
     <None Include="wwwroot\js\summary.js" />
+    <None Include="wwwroot\js\feedback.js" />
     <None Include="wwwroot\js\user.js" />
     <None Include="wwwroot\login\css\.DS_Store" />
     <None Include="wwwroot\login\css\bootstrap\.DS_Store" />

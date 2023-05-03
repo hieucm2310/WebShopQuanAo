@@ -178,6 +178,63 @@ namespace SWShop.Areas.Admin.Controllers
             }
         }
 
+        public IActionResult ProductSize(int productId)
+        {
+            var objSize = _unitOfWork.Size.GetAll(u=>u.ProductId.Equals(productId)).ToList();
+            return View(objSize);
+        }
+        public IActionResult ProductSizeEdit(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+            Size sizeFromDb = _unitOfWork.Size.Get(c => c.Id == id);
+            if (sizeFromDb == null)
+            {
+                return NotFound();
+            }
+            return View(sizeFromDb);
+        }
+        [HttpPost]
+        public IActionResult ProductSizeEdit(Size obj)
+        {
+            if (ModelState.IsValid)
+            {
+                _unitOfWork.Size.Update(obj);
+                _unitOfWork.Save();
+                TempData["success"] = "Edit size successfully!";
+                return RedirectToAction("Index");
+            }
+            return View();
+        }
+
+        public IActionResult ProductSizeDelete(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+            Size sizeFromDb = _unitOfWork.Size.Get(c => c.Id == id);
+            if (sizeFromDb == null)
+            {
+                return NotFound();
+            }
+            return View(sizeFromDb);
+        }
+        [HttpPost, ActionName("ProductSizeDelete")]
+        public IActionResult ProductSizeDeletePOST(int? id)
+        {
+            Size? obj = _unitOfWork.Size.Get(c => c.Id == id);
+            if (obj == null)
+            {
+                return NotFound();
+            }
+            _unitOfWork.Size.Remove(obj);
+            _unitOfWork.Save();
+            TempData["success"] = "Delete size successfully!";
+            return RedirectToAction("Index");
+        }
 
         #region API CALLS
         [HttpGet]
