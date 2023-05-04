@@ -173,7 +173,7 @@
                             <li><a asp-area="Customer" asp-controller="Home" asp-action="Index">Trang chủ</a></li>
                             <li><a asp-area="Customer" asp-controller="Shop" asp-action="Index">Sản phẩm</a></li>
                             <li><a asp-area="Customer" asp-controller="Order" asp-action="Index">Đơn hàng</a></li>
-                            @if (User.IsInRole(SD.Role_Admin))
+                            @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
                             {
                                 <li>
                                     <a asp-area="Admin" asp-controller="Home" asp-action="Index">

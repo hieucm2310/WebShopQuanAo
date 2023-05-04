@@ -16,7 +16,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace SWShop.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = SD.Role_Admin)]
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;

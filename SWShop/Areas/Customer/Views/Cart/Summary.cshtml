@@ -23,7 +23,7 @@
                         <div class="col-12 col-lg-6 pb-4">
                             <div class="row">
                                 <h4 class="d-flex justify-content-between align-items-center mb-3">
-                                    <span class="text-info">Shipping Details:</span>
+                                    <span class="text-info">Chi tiết vận chuyển:</span>
                                 </h4>
                             </div>
                             <div class="row my-1">
@@ -92,7 +92,7 @@
                         <div class="col-12 col-lg-5 offset-lg-1">
                             <div>
                                 <h4 class="d-flex justify-content-between align-items-center mb-3">
-                                    <span class="text-info">Order Summary:</span>
+                                    <span class="text-info">Tóm tắt hóa đơn:</span>
                                 </h4>
                                 <ul class="list-group mb-3">
                                     @foreach (var details in Model.ShoppingCartList)
@@ -107,8 +107,8 @@
                                     }
 
                                     <li class="list-group-item d-flex justify-content-between bg-light">
-                                        <small class="text-info">Total (USD)</small>
-                                        <strong class="text-info">@Model.OrderHeader.OrderTotal.ToString("c")</strong>
+                                        <small class="text-info">Tổng </small>
+                                        <strong class="text-info">@Model.OrderHeader.OrderTotal.ToString("C0", new System.Globalization.CultureInfo("vi-VN")).Replace(" ", "")</strong>
                                     </li>
                                 </ul>
                             </div>
@@ -141,7 +141,7 @@
                         </p>
                     </div>
                     <div class="col-12 col-md-4">
-                        <button type="submit" value="Place Order" class="btn btn-primary form-control">Place Order</button>
+                        <button type="submit" value="Place Order" class="btn btn-primary form-control">Đặt hàng</button>
                         <span>9704198526191432198</span>
                     </div>
                 </div>

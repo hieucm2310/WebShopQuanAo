@@ -14,7 +14,7 @@ using SWShop.DataAccess.Repository;
 namespace SWShop.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Roles = SD.Role_Admin)]
+    [Authorize]
     public class FeedbackController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;
