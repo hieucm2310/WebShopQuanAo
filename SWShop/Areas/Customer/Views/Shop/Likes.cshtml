@@ -58,7 +58,10 @@
                                                     }
                                                 </a>
                                             </li>
-                                            <li><a href="#"><span class="icon_bag_alt"></span></a></li>
+                                            <li>
+                                                <a asp-controller="Home" asp-action="Details"
+                                           asp-route-productId="@product.Id"><span class="icon_bag_alt"></span></a>
+                                            </li>
                                         </ul>
                                     </div>
                                 }
@@ -91,7 +94,10 @@
                                                     }
                                                 </a>
                                             </li>
-                                            <li><a href="#"><span class="icon_bag_alt"></span></a></li>
+                                            <li>
+                                                <a asp-controller="Home" asp-action="Details"
+                                           asp-route-productId="@product.Id"><span class="icon_bag_alt"></span></a>
+                                            </li>
                                         </ul>
                                     </div>
                                 }

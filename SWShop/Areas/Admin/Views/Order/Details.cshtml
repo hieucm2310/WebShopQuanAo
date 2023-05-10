@@ -126,7 +126,10 @@
                                 <div class="col-9">
                                     @if (User.IsInRole(SD.Role_Admin) || User.IsInRole(SD.Role_Employee))
                                     {
-                                        <input asp-for="OrderHeader.Carrier" id="carrier" type="text" class="form-control" />
+                                        @*<input asp-for="OrderHeader.Carrier" id="carrier" type="text" class="form-control" />*@
+                                        <select asp-for="OrderHeader.Carrier" class="form-select border-0 shadow">
+                                            <option disabled selected>GHN</option>
+                                        </select>
                                     }
                                     else
                                     {

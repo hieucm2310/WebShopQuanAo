@@ -52,6 +52,7 @@
                                 <div class="col-9">
                                     <input id="iprovince" asp-for="OrderHeader.Province" class="form-control" hidden />
                                     <select id="province" class="form-select border-0 shadow">
+                                        <option disabled selected>--Chọn Tỉnh--</option>
                                     </select>
                                     <span asp-validation-for="OrderHeader.Province" class="text-danger"></span>
                                 </div>
@@ -63,6 +64,7 @@
                                 <div class="col-9">
                                     <input id="idistrict" asp-for="OrderHeader.District" class="form-control" hidden />
                                     <select id="district" class="form-select border-0 shadow">
+                                        <option disabled selected>--Chọn Huyện--</option>
                                     </select>
                                     <span asp-validation-for="OrderHeader.District" class="text-danger"></span>
                                 </div>
@@ -74,6 +76,7 @@
                                 <div class="col-9">
                                     <input id="iward" asp-for="OrderHeader.Ward" class="form-control" hidden />
                                     <select id="ward" class="form-select border-0 shadow">
+                                        <option disabled selected>--Chọn Phường--</option>
                                     </select>
                                     <span asp-validation-for="OrderHeader.Ward" class="text-danger"></span>
                                 </div>
@@ -177,6 +180,7 @@
 
 
             $('#province').on('change', function () {
+                $('#district').html('<option disabled selected>--Chọn Huyện--</option>');
                 $("#iprovince").val($("#province option:selected").text());
                 var selectedProvince = $(this).val();
                 $.ajax({
@@ -202,6 +206,7 @@
                 });
             });
             $('#district').on('change', function () {
+                $('#ward').html('<option disabled selected>--Chọn Phường--</option>');
                 $("#idistrict").val($("#district option:selected").text());
                 var selectedProvince = $(this).val();
                 $.ajax({

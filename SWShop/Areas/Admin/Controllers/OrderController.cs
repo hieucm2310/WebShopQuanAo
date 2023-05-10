@@ -102,6 +102,7 @@ namespace SWShop.Areas.Admin.Controllers
             if (createOrderGHN.Code == "200")
             {
                 var orderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == OrderVM.OrderHeader.Id);
+                orderHeader.PhoneNumber = OrderVM.OrderHeader.PhoneNumber;
                 orderHeader.TrackingNumber = OrderVM.OrderHeader.TrackingNumber;
                 orderHeader.Carrier = OrderVM.OrderHeader.Carrier;
                 orderHeader.OrderStatus = SD.StatusShipped;

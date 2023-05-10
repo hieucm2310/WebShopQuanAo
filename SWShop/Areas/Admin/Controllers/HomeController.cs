@@ -49,8 +49,8 @@ namespace SWShop.Areas.Admin.Controllers
                 RateList = rates,
                 VNPay = vnpay,
                 COD = cod,
-                VNPayP = (int)Math.Round(vnpay /total*100) ,
-                CODP = (int)Math.Round(cod / total * 100),
+                VNPayP = vnpay!=0?(int)Math.Round(vnpay /total*100):50 ,
+                CODP = cod!=0?(int)Math.Round(cod / total * 100):50,
                 Total = total
             };
             return View(homeAdminVM);

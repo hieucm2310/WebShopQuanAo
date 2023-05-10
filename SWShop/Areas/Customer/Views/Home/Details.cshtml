@@ -594,6 +594,41 @@
                     }
                 });
             });
+            $("#count").on("change", function () {
+                var productId = parseInt($("#productId").val());
+                var sizeId = parseInt($("input[name='sizeNo']:checked").val());
+                $.ajax({
+                    url: "/Customer/Home/GetAmount",
+                    type: "GET",
+                    data: { productId: productId, sizeId: sizeId },
+                    dataType: "json",
+                    success: function (data) {
+                        var x = parseInt(data.x);
+
+                        var count = parseInt($("#count").val());
+
+                        if (x < count) {
+                            Swal.fire('Khong du hang')
+                            $("#btnSubmit").prop("disabled", true);
+                            $("#btnSubmit").css("background", 'darkgray');
+                        } else {
+                            $("#btnSubmit").prop("disabled", false);
+                            $("#btnSubmit").css("background", '#ca1515');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        // Handle any errors that occurred during the request
+                        console.log("Error: " + error);
+                    }
+                });
+            });
+            const input = document.querySelector('#count');
+
+            input.addEventListener('keydown', function (event) {
+                if (event.keyCode === 13) {
+                    event.preventDefault();
+                }
+            });
         });
         $('.image-popup').magnificPopup({
             type: 'image'
