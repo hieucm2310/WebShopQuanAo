@@ -108,11 +108,17 @@
                                        asp-route-productId="@product.Id">@product.Name</a>
                                     </h6>
                                     <div class="rating">
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
+                                        @for (int i = 0; i < 5; i++)
+                                        {
+                                            if (i < product.Star)
+                                            {
+                                                <i class="fa fa-star"></i>
+                                            }
+                                            else
+                                            {
+                                                <i class="fa fa-star-o"></i>
+                                            }
+                                        }
                                     </div>
                                     @if (@product.SalePrice == 0)
                                     {

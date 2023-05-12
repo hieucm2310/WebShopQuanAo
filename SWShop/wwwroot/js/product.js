@@ -8,12 +8,12 @@ function loadDataTable(){
     dataTable = $('#tblData').DataTable({
         "ajax": { url:'/admin/product/getall'},
         "columns": [
-            { data: 'name', "width": "25%" },
-            { data: 'brand', "width": "15%" },
+            { data: 'name', "width": "20%" },
+            { data: 'brand', "width": "10%" },
             { data: 'listPrice', "width": "10%" },
-            { data: 'quantitySold', "width": "15%" },
-            { data: 'quantityRemain', "width": "15%" },
-            { data: 'category.name', "width": "10%" },
+            { data: 'quantitySold', "width": "5%" },
+            { data: 'quantityRemain', "width": "5%" },
+            { data: 'category.name', "width": "5%" },
             {
                 data: 'id',
                 "render": function (data) {
@@ -22,7 +22,7 @@ function loadDataTable(){
                      <a onClick=Delete('/admin/product/delete/${data}') class="btn btn-danger mx-2"> <i class="bi bi-trash-fill"></i> Xóa</a>
                     </div>`
                 },
-                "width": "25%"
+                "width": "5%"
             }
         ]
     });

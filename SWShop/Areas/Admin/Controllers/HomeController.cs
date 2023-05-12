@@ -16,7 +16,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 namespace SWShop.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize]
+    [Authorize(Roles = SD.Role_Admin + "," + SD.Role_Employee)]
     public class HomeController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;
@@ -49,8 +49,8 @@ namespace SWShop.Areas.Admin.Controllers
                 RateList = rates,
                 VNPay = vnpay,
                 COD = cod,
-                VNPayP = vnpay!=0?(int)Math.Round(vnpay /total*100):50 ,
-                CODP = cod!=0?(int)Math.Round(cod / total * 100):50,
+                VNPayP = vnpay!=0?(int)Math.Round(vnpay /total*100):0 ,
+                CODP = cod!=0?(int)Math.Round(cod / total * 100):0,
                 Total = total
             };
             return View(homeAdminVM);
